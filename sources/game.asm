@@ -8,6 +8,7 @@ include "mouse.inc"
 include "keys.inc"
 include "array.inc"
 include "menus.inc"
+include "draw.inc"
 include "logic.inc"
 
 CODESEG
