@@ -1,0 +1,246 @@
+IDEAL
+P386
+MODEL FLAT, C
+ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
+
+include "setup.inc"
+include "print.inc"
+include "draw.inc"
+
+;;;;global constants
+VMEMADR EQU 0A0000h	; video memory address
+SCRWIDTH EQU 320	; screen witdth
+SCRHEIGHT EQU 200	; screen height
+
+CODESEG
+;fill background
+	proc fillBackground
+		ARG 	@@fillcolor:byte
+		USES 	eax, ecx, edi
+	
+	    	mov	edi, VMEMADR ; Initialize video memory address.
+	    	mov	ecx, SCRWIDTH*SCRHEIGHT ; Scan the whole video memory and assign the background colour.
+	    	mov	al,[@@fillcolor]
+	    	rep	stosb
+	    	ret
+	endp fillBackground
+
+;draw a rectangle filled or only the border depending on the value of  @@filled
+;filled will indicate if you want to draw a filled rectangle or not 0 false and 1 true
+	proc drawRectangle
+		ARG @@x0:word,@@y0:word,@@width:word,@@height:word,@@color:word,@@filled:byte
+		USES 	eax,ebx,ecx,edx, edi ; note: MUL USES edx!
+
+			movzx eax, [@@y0]; Compute the index of the rectangle's top left corner
+			mov edx, SCRWIDTH
+			mul edx
+			add	ax, [@@x0]
+			mov edi, VMEMADR; Compute top left corner address
+			add edi, eax
+		
+		; Plot the top horizontal edge.
+			movzx edx, [@@width]	; store width in edx for later reuse
+			mov	ecx, edx
+			movzx	eax,[@@color]
+			rep stosb
+			sub edi, edx		; reset edi to left-top corner
+			movzx ebx,[@@filled] ;look if you want a filled or only the border off a rectangle
+			cmp ebx,1
+			je @@fill
+			movzx ecx,[@@height]; plot both vertical edges
+
+		@@vertLoop:
+			mov	[edi],ax		; left edge
+			mov	[edi+edx-1],ax	; right edge
+			add	edi, SCRWIDTH
+			loop @@vertLoop
+			sub edi, SCRWIDTH; edi should point at the bottom-left corner now
+			mov	ecx, edx; Plot the bottom horizontal edge.
+			rep stosb
+			jmp @@end
+		
+		@@fill:
+			movzx ebx,[@@height]
+			movzx ecx,[@@width]
+		
+		@@filledLoop:
+			rep stosb
+	    	movzx ecx,[@@width]
+	    	sub edi, edx
+	    	add edi, SCRWIDTH
+	    	dec ebx
+	    	cmp ebx,0
+	    	jnz @@filledLoop
+	
+		@@end:
+			ret
+	endp drawRectangle
+
+;draw grid
+	proc drawGrid
+		ARG 	@@x0:word, @@y0:word
+		USES 	eax,ebx,ecx,edx,edi
+
+			movzx eax,[@@x0] ;x-coordinate begin
+			movzx ebx,[@@y0] ;y-coordinate begin
+			movzx ecx,[gridValues];this are the columns
+			mov edx,[grid];grid is the tickness of the grid
+			mov edi,[grid+3*4];grid+12 is the grid width
+	
+    	@@horizontal:;loop to draw all horizontal lines of the grid 
+        	call drawRectangle,eax,ebx,edi,edx,1,1
+			cmp ecx,0
+			je @@vertical
+			sub ecx,1
+			add ebx,[grid+1*4];this is the space between a row or column in pixels
+			jmp @@horizontal
+
+    	@@vertical:;prepare to loop for the vertical lines
+			movzx ecx,[gridValues+1];this are the rows
+			movzx ebx,[@@y0]
+			mov edi,[grid+2*4];grid+8 is the grid height
+			jmp @@loop_v
+	
+		@@loop_v:;loop to draw all vertical lines of the grid
+			call drawRectangle,eax,ebx,edx,edi,1,1		
+			cmp ecx,0
+			je @@end
+			sub ecx,1
+			add eax,[grid+1*4];this is the space between a row or column in pixels
+			jmp @@loop_v
+
+    	@@end:
+        	ret
+	endp drawGrid
+
+;draw a move on the board
+;row is op de horizontaale as kiezen
+;col is op de verticale as kiezen
+;row : 0<=row<=6
+;col: 0<=col<=5
+	proc drawMove
+		ARG 	@@row:word,@@col:word,@@plyr:byte
+		USES 	eax,ebx,ecx,edx
+	
+			movzx eax,[@@col] ;column
+			movzx ebx,[@@row];row
+			mov ebx,[vertical+4*ebx] ;acces the value in the array to the corespnding row
+			mov eax,[horizontal +4*eax];acces the value in the array to the corespnding column
+			movzx ecx,[@@plyr]
+			mov edx,1
+			call drawRectangle,eax,ebx,[pieceDim],[pieceDim],ecx,edx
+			ret
+	endp drawMove
+
+;draw a button 
+;a button on screen is an action you can perform in the app
+	proc makeButton
+		ARG @@string:dword,@@color:word,@@row:byte,@@column:byte
+		USES eax,ebx,ecx,edx,edi
+	
+			mov eax,[@@string]
+			movzx edi,[@@color]
+			movzx ebx,[@@row]
+			movzx edx,[@@column]
+			call printString,eax,edi,ebx,edx
+			movzx eax,[buttonSize] ;size of the border of the button
+			mov ecx,1
+	
+		@@adjustHeight:
+			cmp ecx,ebx
+			je @@adjusted
+			add al,[buttonSize+1] ;outer edges of the button
+			add ecx,1
+			jmp @@adjustHeight
+	
+		@@adjusted:
+			mov ebx,eax
+			movzx eax,[buttonSize]
+			mov ecx,1
+	
+		@@adjustWidth:
+			cmp ecx,edx
+			je @@mkButton
+			add al,[buttonSize+1*1]
+			add ecx,1
+			jmp @@adjustWidth
+	
+		@@mkButton:
+			movzx ecx, [buttonSize+1*3] ;width of the button
+			movzx edx, [buttonSize+1*2] ;height of the button
+			call drawRectangle,eax,ebx,ecx,edx,edi,0
+			ret 
+	endp makeButton
+
+;display the current turn
+	proc playerTurn
+		ARG @@color:byte
+		USES eax,ebx,ecx,edx
+			movzx eax,[colors+2*2]
+			mov edx,offset turn
+			call printString,edx,eax,1,1 ;turn :
+			movzx edx,[@@color] ;this is the color of the current player
+			mov eax,[turnPiece] ;xpos
+			mov ebx,[turnPiece+1*4];ypos
+			mov ecx,[turnPiece+2*4];piece dimention
+			call drawRectangle,eax,ebx,ecx,ecx,edx,1 ;to indicate the current turn
+			ret 
+	endp playerTurn
+
+;draw the change the turn
+	proc changeTurn
+		ARG @@color:byte
+		USES edx
+	
+			movzx edx,[@@color] ;this is the color corresponding to the player who just made a move
+			cmp dx,[colors+3*2];color of player1
+			je @@p1
+			movzx edx,[colors+3*2]
+			jmp @@drawTurn
+
+		@@p1:
+			movzx edx,[colors+4*2];color of player2
+		
+		@@drawTurn:
+			call playerTurn,edx
+			ret
+	endp changeTurn
+
+;announce the winner
+	proc announceInfo
+		USES eax,ebx,ecx
+
+			movzx eax,[colors];black
+			movzx ebx,[statusGrid];status of the game
+			call drawRectangle,0,0,100,200,eax,1 ;hide the info that is useless in this menu since you stay onto the same page
+			movzx eax,[colors+2*2];white
+			cmp ebx,3
+			jl @@winnerFound
+			mov ecx,offset draw	
+			call printString,ecx,eax,1,1;draw!
+			jmp @@end
+
+		@@winnerFound:
+			mov ecx,offset winner
+			call printString,ecx,eax,1,1;winner:
+		
+		@@end:
+			ret
+	endp announceInfo
+
+DATASEG
+;;Constants
+	;these are the constants used for the graphics of the grid
+	;they have been ordered as follows:
+	;tickness of the grid,spacing between each column or row,the height,the width
+		grid dd 10,30,180,220
+	;this are the constants used to place the turn piece onto the gamescreen
+	; they are stores as follow xpos,ypos,dimention
+		turnPiece dd 10,30,50
+	;the size off the piece that needs to be drawn
+		pieceDim dd 20
+	;these are the elments used to define a button
+	;the represent the following: how long is each letter in the box,how wide is each letter in the box,height of the box, width off the box
+		buttonSize db 7,8,11,130
+
+END 
