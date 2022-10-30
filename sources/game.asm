@@ -14,16 +14,53 @@ include "logic.inc"
 CODESEG
 ;game interactions
 proc gameInteractions
-	USES eax
-		@@letter_s:
-		; if the letter s is pressed
-		;mov al, [__keyb_keyboardState + 10h]
-		cmp al, 1	; if 1 = key pressed
-		je @@stats
-		jmp @@no_key
-		@@stats:
-			call menuDisplay,2,5,2,15,10,0
-		@@no_key:
+	USES eax,ebx,edx
+			movzx ebx,[currentMenu]
+			jmp [jumpTable+4*ebx]
+
+		mainMenu:
+			;mov al, [__keyb_keyboardState + 1h] ;escape
+			;cmp al, 1	; if 1 = key pressed
+			;je @@exit
+			mov al, [__keyb_keyboardState + 1fh] ;letter s
+			cmp al, 1	; if 1 = key pressed
+			je stats
+			mov al, [__keyb_keyboardState + 13h] ;letter r
+			cmp al, 1	; if 1 = key pressed
+			je rules
+			mov al, [__keyb_keyboardState + 39h] ;letter r
+			cmp al, 1	; if 1 = key pressed
+			je difficulty
+			jmp @@noKey
+
+		difficulty:
+			mov [currentMenu],3
+			mov al, [__keyb_keyboardState + 30h] ;letter b
+			cmp al, 1	; if 1 = key pressed
+			je @@goingToMain
+			mov al, [__keyb_keyboardState + 02h] ;nummber 1
+			cmp al, 1	; if 1 = key pressed
+			
+			jmp @@noKey
+
+		stats:
+			mov [currentMenu],1
+			jmp @@staticMenu
+
+		rules:
+			mov [currentMenu],2
+
+		@@staticMenu:
+			mov al, [__keyb_keyboardState + 30h] ;letter b
+			cmp al, 1	; if 1 = key pressed
+			je @@goingToMain
+			jmp @@noKey
+
+		@@goingToMain:
+			mov [currentMenu],0; stands for the main menu
+			jmp @@noKey
+
+		@@noKey:
 		ret 
 endp gameInteractions
 
@@ -37,17 +74,18 @@ endp gameInteractions
 			call displayMouse
 		
 		@@mainMenuChoise:
-		    mov ah,08h
-		    int 21h
-		    cmp al, 1Bh 				;look if you pressed the 'escape' key
-		    je @@exit
-			cmp al,'r'					;look if you pressed the 'r' key
-		    je @@rules
-			cmp al,'s'					;look if you pressed the 's' key
-		    je @@stats
-	   		cmp al,20h					;look if you pressed the 'space' key
-		    je @@difficultyMenu    		
-		    jmp @@mainMenuChoise	;if no keystroke is detected remain in this loop
+			mov al, [__keyb_keyboardState + 01h]
+			cmp al, 1	; if 1 = key pressed
+		    je @@exit  		
+		    call gameInteractions
+			movzx ebx, [currentMenu]
+			cmp ebx,1
+			je @@stats
+			cmp ebx,2
+			je @@rules
+			cmp ebx,3
+			je @@difficultyMenu 
+			jmp @@mainMenuChoise	;if no keystroke is detected remain in this loop
 	
 		@@stats:
 			call menuDisplay,2,5,2,15,10,0
@@ -57,9 +95,9 @@ endp gameInteractions
 			call menuDisplay,1,0,0,17,1,0
 		
 		@@staticMenuLoop:
-			mov ah,08h
-		    int 21h
-			cmp al,'b'			;look if you pressed the 'b' key
+			call gameInteractions
+			movzx ebx, [currentMenu]
+			cmp ebx,0
 			je @@mainMenu
 			jmp @@staticMenuLoop ;if no keystroke is detected remain in this loop
 		
@@ -67,12 +105,14 @@ endp gameInteractions
 			call menuDisplay,5,2,6,8,6,0
 	
 		@@difficltyLoop:
-			mov ah,08h
-		    int 21h
-			cmp al, '1'
-			jge @@adaptField
-			cmp al,1Bh
-			je @@exit
+			;mov ah,08h
+		    ;int 21h
+			call gameInteractions
+			movzx ebx, [currentMenu]
+			cmp ebx,0
+			je @@mainMenu
+			;cmp al, '1'
+			;jge @@adaptField
 			jmp @@difficltyLoop;if no keystroke is detected remain in this loop
 
 		@@adaptField:
@@ -222,12 +262,16 @@ endp gameInteractions
 			call setVideoMode,13h
 	    	call fillBackground,[colors];black
  			call mouse_install, offset mouseHandler
-			;call __keyb_installKeyboardHandler
+			call __keyb_installKeyboardHandler
 			call game
 	endp main
 
 DATASEG
 		;indicate the last valid input in chose difficulty level
 		difficultyInput db '8'
+		;current menu
+		currentMenu db 0
+		;jumpTable
+		jumpTable dd mainMenu,stats,rules,difficulty
 STACK 100h
 END main
