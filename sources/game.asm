@@ -160,7 +160,6 @@ proc gameInteractions
 		ret 
 endp gameInteractions
 
-
 ;actual game engine
 	proc game
 		USES eax,ebx,ecx,edx
