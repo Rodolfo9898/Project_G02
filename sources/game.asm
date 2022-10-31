@@ -50,7 +50,6 @@ proc numberInputs
 
 		@@numberInput:
 			mov al,[__keyb_rawScanCode]
-			dec eax
 			movzx ebx,[@@currentMenu]
 			cmp ebx,4
 			je @@difficulty
@@ -59,15 +58,18 @@ proc numberInputs
 			jmp @@noKey
 		
 		@@difficulty:
-			cmp al, 07h ;number 8 on toprow and not on numberpad
+			cmp al, 08h ;number 8 on toprow and not on numberpad
 			jg @@noKey
+			dec eax
 			mov [exp],al
+			inc eax
 			mov [currentMenu],5
 			jmp @@noKey
 		
 		@@setup:
 			cmp al, 03h ;number 2 on toprow and not on numberpad
 			jg @@noKey
+			inc eax ;scancode and choise in array are off by one so add one to compensate
 			mov [setting],al
 			mov [currentMenu],6
 
@@ -139,15 +141,14 @@ proc gameInteractions
 			mov [currentMenu],5
 
 		@@choiseMenu:
-		;TODO NUMBER INTERPRETATION
-			mov al, [__keyb_keyboardState + 01h] ;escape
-			cmp al, 1	; if 1 = key pressed
-			je @@exit
 			call numberInputs,ebx
 			jmp @@staticMenu
 		
 		@@gameplay:
-			mov al, [__keyb_keyboardState + 32h] ;letter m
+			mov [currentMenu],6
+
+		@@gameplayscreen:
+			mov al, [__keyb_keyboardState + 27h] ;letter m
 			cmp al, 1	; if 1 = key pressed
 			je @@goToMain
 			jmp @@noKey
@@ -209,11 +210,11 @@ endp gameInteractions
 
 		@@choise:
 			call menuDisplay,3,5,1,10,10,0
-			movzx edx,[exp]
-			dec edx
-			add edx,'0'
-			call moveCursor,18,18
-			call printChar,1,edx
+			;movzx edx,[exp]
+			;dec edx
+			;add edx,'0'
+			;call moveCursor,18,18
+			;call printChar,1,edx
 
 		@@choiseLoop:	
 			call gameInteractions
@@ -223,21 +224,12 @@ endp gameInteractions
 			cmp ebx,4
 			je @@difficulty
 			cmp ebx,6
-			je @@setup1
+			je @@screenGame
 			jmp @@choiseLoop
-
-		@@setup1:
-			movzx edx,[colors+3*2];color of player1
-			jmp @@screenGame
-		
-		@@setup2:
-			movzx edx,[colors+4*2];color of player2
-	
 		
 		@@screenGame:
 			movzx edx,[setting]
-			add edx,2
-			movzx ecx,[colors+edx*2];color of player1
+			movzx ecx,[colors+edx*2];color of player you chose to start
 			call menuDisplay,6,0,2,14,12,ecx
 			add edx,'0'
 			call moveCursor,18,18
