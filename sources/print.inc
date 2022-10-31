@@ -1,6 +1,8 @@
 ;used procs outised the file
 global printString:proc,\
-       printScore:proc
+       printScore:proc,\
+       moveCursor:proc,\
+       printChar:proc
        
 ;constants
 global winnerCount:byte
