@@ -66,10 +66,10 @@ proc numberInputs
 			jmp @@noKey
 		
 		@@setup:
-			cmp al, 04h ;number 2 on toprow and not on numberpad
+			cmp al, 03h ;number 2 on toprow and not on numberpad
 			jg @@noKey
 			mov [setting],al
-			;mov [currentMenu],5
+			mov [currentMenu],6
 
 		@@noKey:
 			ret 
@@ -90,6 +90,8 @@ proc gameInteractions
 			je @@difficulty
 			cmp ebx,5
 			je @@choise
+			cmp ebx,6
+			je @@gameplay
 			jmp @@noKey
 
 		@@mainMenu:
@@ -141,7 +143,15 @@ proc gameInteractions
 			mov al, [__keyb_keyboardState + 01h] ;escape
 			cmp al, 1	; if 1 = key pressed
 			je @@exit
+			call numberInputs,ebx
 			jmp @@staticMenu
+		
+		@@gameplay:
+			mov al, [__keyb_keyboardState + 32h] ;letter m
+			cmp al, 1	; if 1 = key pressed
+			je @@goToMain
+			jmp @@noKey
+
 		@@exit:
 			mov [currentMenu],1
 		
@@ -212,7 +222,33 @@ endp gameInteractions
 			je @@exit
 			cmp ebx,4
 			je @@difficulty
+			cmp ebx,6
+			je @@setup1
 			jmp @@choiseLoop
+
+		@@setup1:
+			movzx edx,[colors+3*2];color of player1
+			jmp @@screenGame
+		
+		@@setup2:
+			movzx edx,[colors+4*2];color of player2
+	
+		
+		@@screenGame:
+			movzx edx,[setting]
+			add edx,2
+			movzx ecx,[colors+edx*2];color of player1
+			call menuDisplay,6,0,2,14,12,ecx
+			add edx,'0'
+			call moveCursor,18,18
+			call printChar,1,edx
+
+		@@gameplayLoop:
+			call gameInteractions
+			movzx ebx, [currentMenu]
+			cmp ebx,0
+			je @@mainMenu
+			jmp @@gameplayLoop
 
 		@@exit:
 			movzx edx,[colors+2*2]
