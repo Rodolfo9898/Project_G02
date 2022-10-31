@@ -13,6 +13,69 @@ include "logic.inc"
 include "print.inc"
 
 CODESEG
+;numbers interactions
+proc numberInputs
+	ARG @@currentMenu:byte
+	USES eax,ebx,ecx
+			mov al, [__keyb_keyboardState + 02h] ;number 1
+			cmp al, 1	; if 1 = key pressed
+			je @@numberInput
+			mov al, [__keyb_keyboardState + 03h] ;number 2
+			cmp al, 1	; if 1 = key pressed
+			je @@numberInput
+			mov al, [__keyb_keyboardState + 04h] ;number 3
+			cmp al, 1	; if 1 = key pressed
+			je @@numberInput
+			mov al, [__keyb_keyboardState + 05h] ;number 4
+			cmp al, 1	; if 1 = key pressed
+			je @@numberInput
+			mov al, [__keyb_keyboardState + 06h] ;number 5
+			cmp al, 1	; if 1 = key pressed
+			je @@numberInput
+			mov al, [__keyb_keyboardState + 07h] ;number 6
+			cmp al, 1	; if 1 = key pressed
+			je @@numberInput
+			mov al, [__keyb_keyboardState + 08h] ;number 7
+			cmp al, 1	; if 1 = key pressed
+			je @@numberInput
+			mov al, [__keyb_keyboardState + 09h] ;number 8
+			cmp al, 1	; if 1 = key pressed
+			je @@numberInput
+			mov al, [__keyb_keyboardState + 0ah] ;number 9
+			cmp al, 1	; if 1 = key pressed
+			mov al, [__keyb_keyboardState + 0bh] ;number 0
+			cmp al, 1	; if 1 = key pressed
+			je @@numberInput
+			jmp @@noKey
+
+		@@numberInput:
+			mov al,[__keyb_rawScanCode]
+			dec eax
+			movzx ebx,[@@currentMenu]
+			cmp ebx,4
+			je @@difficulty
+			cmp ebx,5
+			je @@setup
+			jmp @@noKey
+		
+		@@difficulty:
+			cmp al, 07h ;number 8 on toprow and not on numberpad
+			jg @@noKey
+			mov [exp],al
+			mov [currentMenu],5
+			jmp @@noKey
+		
+		@@setup:
+			cmp al, 04h ;number 2 on toprow and not on numberpad
+			jg @@noKey
+			mov [setting],al
+			;mov [currentMenu],5
+
+		@@noKey:
+			ret 
+endp numberInputs 
+
+
 ;game interactions
 proc gameInteractions
 	USES eax,ebx,edx
@@ -67,11 +130,17 @@ proc gameInteractions
 			mov [currentMenu],4
 
 		@@difficultyMenu:
-		;TODO NUMBER INTERPRETATION
+			call numberInputs,ebx
 			jmp @@staticMenu
 
 		@@choise:
+			mov [currentMenu],5
+
+		@@choiseMenu:
 		;TODO NUMBER INTERPRETATION
+			mov al, [__keyb_keyboardState + 01h] ;escape
+			cmp al, 1	; if 1 = key pressed
+			je @@exit
 			jmp @@staticMenu
 		@@exit:
 			mov [currentMenu],1
@@ -127,13 +196,20 @@ endp gameInteractions
 			cmp ebx,5
 			je @@choise
 			jmp @@difficultyLoop
-		
+
 		@@choise:
 			call menuDisplay,3,5,1,10,10,0
+			movzx edx,[exp]
+			dec edx
+			add edx,'0'
+			call moveCursor,18,18
+			call printChar,1,edx
 
 		@@choiseLoop:	
 			call gameInteractions
 			movzx ebx, [currentMenu]
+			cmp ebx,1
+			je @@exit
 			cmp ebx,4
 			je @@difficulty
 			jmp @@choiseLoop

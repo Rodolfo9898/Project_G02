@@ -6,7 +6,7 @@ global printString:proc,\
        ;printchar and move cursor used for debbugging
        
 ;constants
-global winnerCount:dword
+global winnerCount:byte
 
 ;titles
 global connect4:byte,\

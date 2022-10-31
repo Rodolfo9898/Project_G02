@@ -4,4 +4,5 @@ global  __keyb_installKeyboardHandler:proc,\
 
 ;constants
 global __keyb_rawScanCode:byte,\
+       __keyb_keysActive:byte,\
        __keyb_keyboardState:byte:128
