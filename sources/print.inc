@@ -3,9 +3,10 @@ global printString:proc,\
        printScore:proc,\
        moveCursor:proc,\
        printChar:proc
+       ;printchar and move cursor used for debbugging
        
 ;constants
-global winnerCount:byte
+global winnerCount:dword
 
 ;titles
 global connect4:byte,\

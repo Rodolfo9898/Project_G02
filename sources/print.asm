@@ -72,7 +72,7 @@ CODESEG
 		USES eax,ebx,ecx,edx,edi
 			
 			movzx ebx,[@@number]
-			movzx eax,[winnerCount+ebx] ;the current score for draws,player1 and player2 depending on @@number
+			mov eax,[winnerCount+4*ebx] ;the current score for draws,player1 and player2 depending on @@number
 			mov	ebx, 10		; divider
 			xor ecx, ecx	; counter for digits to be printed
 
@@ -102,7 +102,7 @@ DATASEG
 ;;;;Constants
     ;to hold the information of who has won howmany times
 	;they are orded as follows: draws,wins by player1,wins by player 2	
-		winnerCount db 0,0,0
+		winnerCount dd 0,0,0
     ;cursor positons in statistics verticaly
 		cursorPosVert db 10,14,18
     ;cursor position in statistics horizontaly

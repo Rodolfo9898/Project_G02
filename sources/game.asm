@@ -19,14 +19,60 @@ proc gameInteractions
 			movzx ebx,[currentMenu]
 			cmp ebx,0
 			je @@mainMenu
-			ret
+			cmp ebx,2
+			je @@rules
+			cmp ebx,3
+			je @@stats
+			cmp ebx,4
+			je @@difficulty
+			cmp ebx,5
+			je @@choise
+			jmp @@noKey
 
 		@@mainMenu:
 			mov al, [__keyb_keyboardState + 01h] ;escape
 			cmp al, 1	; if 1 = key pressed
 			je @@exit
+			mov al, [__keyb_keyboardState + 1fh] ;letter s
+			cmp al, 1	; if 1 = key pressed
+			je @@stats
+			mov al, [__keyb_keyboardState + 13h] ;letter r
+			cmp al, 1	; if 1 = key pressed
+			je @@rules
+			mov al, [__keyb_keyboardState + 39h] ;spacebar
+			cmp al, 1	; if 1 = key pressed
+			je @@difficulty
 			jmp @@noKey
 
+		@@stats:
+			mov [currentMenu],3
+			jmp @@staticMenu
+
+		@@rules:
+			mov [currentMenu],2
+
+		@@staticMenu:
+			mov al, [__keyb_keyboardState + 30h] ;letter b
+			cmp al, 1	; if 1 = key pressed
+			je @@goToMain
+			jmp @@noKey
+		
+		@@goToMain:
+			cmp ebx,5 ;coming back from player choise to change the board size
+			je @@difficulty
+			mov [currentMenu],0
+			jmp @@noKey
+
+		@@difficulty:
+			mov [currentMenu],4
+
+		@@difficultyMenu:
+		;TODO NUMBER INTERPRETATION
+			jmp @@staticMenu
+
+		@@choise:
+		;TODO NUMBER INTERPRETATION
+			jmp @@staticMenu
 		@@exit:
 			mov [currentMenu],1
 		
@@ -48,8 +94,50 @@ endp gameInteractions
 			movzx ebx, [currentMenu]
 			cmp ebx,1
 			je @@exit
+			cmp ebx,2
+			je @@rules
+			cmp ebx,3
+			je @@stats
+			cmp ebx,4
+			je @@difficulty
 			jmp @@mainMenuChoise	;if no keystroke is detected remain in this loop
 		
+		@@stats:
+			call menuDisplay,2,5,2,15,10,0
+			jmp @@staticLoop
+
+		@@rules:
+			call menuDisplay,1,0,0,17,1,0
+		
+		@@staticLoop:
+			call gameInteractions
+			movzx ebx, [currentMenu]
+			cmp ebx,0
+			je @@mainMenu
+			jmp @@staticLoop
+		
+		@@difficulty:
+			call menuDisplay,5,2,6,8,6,0
+		
+		@@difficultyLoop:
+			call gameInteractions
+			movzx ebx, [currentMenu]
+			cmp ebx,0
+			je @@mainMenu
+			cmp ebx,5
+			je @@choise
+			jmp @@difficultyLoop
+		
+		@@choise:
+			call menuDisplay,3,5,1,10,10,0
+
+		@@choiseLoop:	
+			call gameInteractions
+			movzx ebx, [currentMenu]
+			cmp ebx,4
+			je @@difficulty
+			jmp @@choiseLoop
+
 		@@exit:
 			movzx edx,[colors+2*2]
 			call mouse_uninstall
