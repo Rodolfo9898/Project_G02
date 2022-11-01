@@ -208,12 +208,9 @@ endp gameInteractions
 			jmp @@difficultyLoop
 
 		@@choise:
+			movzx ebx, [exp]
+			call adaptField,ebx
 			call menuDisplay,3,5,1,10,10,0
-			;movzx edx,[exp]
-			;dec edx
-			;add edx,'0'
-			;call moveCursor,18,18
-			;call printChar,1,edx
 
 		@@choiseLoop:	
 			call gameInteractions
@@ -230,9 +227,9 @@ endp gameInteractions
 			movzx edx,[setting]
 			movzx ecx,[colors+edx*2];color of player you chose to start
 			call menuDisplay,6,0,2,14,12,ecx
-			add edx,'0'
-			call moveCursor,18,18
-			call printChar,1,edx
+			;add edx,'0'
+			;call moveCursor,18,18
+			;call printChar,1,edx
 
 		@@gameplayLoop:
 			call gameInteractions
