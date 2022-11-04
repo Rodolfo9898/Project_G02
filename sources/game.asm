@@ -5,7 +5,6 @@ ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
 include "setup.inc"
 include "mouse.inc"
-include "keys.inc"
 include "array.inc"
 include "menus.inc"
 include "draw.inc"
