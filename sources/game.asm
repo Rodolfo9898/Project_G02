@@ -193,7 +193,6 @@ CODESEG
 		@@exit:
 			movzx edx,[colors+2*2]
 			call mouse_uninstall
-			call __keyb_uninstallKeyboardHandler
 			call terminateProcess,edx,72
 			ret 
 	endp game
