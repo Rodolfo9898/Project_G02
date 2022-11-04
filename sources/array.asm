@@ -453,7 +453,7 @@ DATASEG
     ;these are the possible last elements off the grid (upperRightCorner)
 		corners db 19,29,41,55,62,69,63
     ;indicate what the last valid input in the game is
-		validators db '5','6','7','8','9',';','8'
+		validators db '5','6','7','8','9',':','8'
     ;these will help you adapt the spaces for the given field in vertical
 		v0 db 146,160,170,178,161,146,181
 		v1 db 104,125,140,152,138,125,158

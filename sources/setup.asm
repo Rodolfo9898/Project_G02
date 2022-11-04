@@ -70,7 +70,7 @@ DATASEG
 		vertical  dd 0,0,0,0,0,0,0,0
 		horizontal dd 0,0,0,0,0,0,0,0,0,0
 	;this are the colors used in the graphics
-	;the colors are: black,blue,white,yellow and purple
+	;the colors are: black,blue,white,yellow,purple and green
 		colors dw 0,1,15,14,13,2
 
 END

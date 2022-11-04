@@ -13,153 +13,6 @@ include "logic.inc"
 include "print.inc"
 
 CODESEG
-;numbers interactions
-proc numberInputs
-	ARG @@currentMenu:byte
-	USES eax,ebx,ecx
-			mov al, [__keyb_keyboardState + 02h] ;number 1
-			cmp al, 1	; if 1 = key pressed
-			je @@numberInput
-			mov al, [__keyb_keyboardState + 03h] ;number 2
-			cmp al, 1	; if 1 = key pressed
-			je @@numberInput
-			mov al, [__keyb_keyboardState + 04h] ;number 3
-			cmp al, 1	; if 1 = key pressed
-			je @@numberInput
-			mov al, [__keyb_keyboardState + 05h] ;number 4
-			cmp al, 1	; if 1 = key pressed
-			je @@numberInput
-			mov al, [__keyb_keyboardState + 06h] ;number 5
-			cmp al, 1	; if 1 = key pressed
-			je @@numberInput
-			mov al, [__keyb_keyboardState + 07h] ;number 6
-			cmp al, 1	; if 1 = key pressed
-			je @@numberInput
-			mov al, [__keyb_keyboardState + 08h] ;number 7
-			cmp al, 1	; if 1 = key pressed
-			je @@numberInput
-			mov al, [__keyb_keyboardState + 09h] ;number 8
-			cmp al, 1	; if 1 = key pressed
-			je @@numberInput
-			mov al, [__keyb_keyboardState + 0ah] ;number 9
-			cmp al, 1	; if 1 = key pressed
-			mov al, [__keyb_keyboardState + 0bh] ;number 0
-			cmp al, 1	; if 1 = key pressed
-			je @@numberInput
-			jmp @@noKey
-
-		@@numberInput:
-			mov al,[__keyb_rawScanCode]
-			movzx ebx,[@@currentMenu]
-			cmp ebx,4
-			je @@difficulty
-			cmp ebx,5
-			je @@setup
-			jmp @@noKey
-		
-		@@difficulty:
-			cmp al, 08h ;number 8 on toprow and not on numberpad
-			jg @@noKey
-			dec eax
-			mov [exp],al
-			inc eax
-			mov [currentMenu],5
-			jmp @@noKey
-		
-		@@setup:
-			cmp al, 03h ;number 2 on toprow and not on numberpad
-			jg @@noKey
-			inc eax ;scancode and choise in array are off by one so add one to compensate
-			mov [setting],al
-			mov [currentMenu],6
-
-		@@noKey:
-			ret 
-endp numberInputs 
-
-
-;game interactions
-proc gameInteractions
-	USES eax,ebx,edx
-			movzx ebx,[currentMenu]
-			cmp ebx,0
-			je @@mainMenu
-			cmp ebx,2
-			je @@rules
-			cmp ebx,3
-			je @@stats
-			cmp ebx,4
-			je @@difficulty
-			cmp ebx,5
-			je @@choise
-			cmp ebx,6
-			je @@gameplay
-			jmp @@noKey
-
-		@@mainMenu:
-			mov al, [__keyb_keyboardState + 01h] ;escape
-			cmp al, 1	; if 1 = key pressed
-			je @@exit
-			mov al, [__keyb_keyboardState + 1fh] ;letter s
-			cmp al, 1	; if 1 = key pressed
-			je @@stats
-			mov al, [__keyb_keyboardState + 13h] ;letter r
-			cmp al, 1	; if 1 = key pressed
-			je @@rules
-			mov al, [__keyb_keyboardState + 39h] ;spacebar
-			cmp al, 1	; if 1 = key pressed
-			je @@difficulty
-			jmp @@noKey
-
-		@@stats:
-			mov [currentMenu],3
-			jmp @@staticMenu
-
-		@@rules:
-			mov [currentMenu],2
-
-		@@staticMenu:
-			mov al, [__keyb_keyboardState + 30h] ;letter b
-			cmp al, 1	; if 1 = key pressed
-			je @@goToMain
-			jmp @@noKey
-		
-		@@goToMain:
-			cmp ebx,5 ;coming back from player choise to change the board size
-			je @@difficulty
-			mov [currentMenu],0
-			jmp @@noKey
-
-		@@difficulty:
-			mov [currentMenu],4
-
-		@@difficultyMenu:
-			call numberInputs,ebx
-			jmp @@staticMenu
-
-		@@choise:
-			mov [currentMenu],5
-
-		@@choiseMenu:
-			call numberInputs,ebx
-			jmp @@staticMenu
-		
-		@@gameplay:
-			mov [currentMenu],6
-
-		@@gameplayscreen:
-			mov al, [__keyb_keyboardState + 27h] ;letter m
-			cmp al, 1	; if 1 = key pressed
-			je @@goToMain
-			jmp @@noKey
-
-		@@exit:
-			mov [currentMenu],1
-		
-		@@noKey:
-		ret 
-endp gameInteractions
-
 ;actual game engine
 	proc game
 		USES eax,ebx,ecx,edx
@@ -168,76 +21,175 @@ endp gameInteractions
 			call menuDisplay,0,5,3,15,10,0
 			call displayMouse
 		
-		@@mainMenuChoise:	
-		    call gameInteractions
-			movzx ebx, [currentMenu]
-			cmp ebx,1
-			je @@exit
-			cmp ebx,2
-			je @@rules
-			cmp ebx,3
-			je @@stats
-			cmp ebx,4
-			je @@difficulty
-			jmp @@mainMenuChoise	;if no keystroke is detected remain in this loop
-		
+		@@mainMenuChoise:
+		    mov ah,08h
+		    int 21h
+		    cmp al, 1Bh 				;look if you pressed the 'escape' key
+		    je @@exit
+			cmp al,'r'					;look if you pressed the 'r' key
+		    je @@rules
+			cmp al,'s'					;look if you pressed the 's' key
+		    je @@stats
+	   		cmp al,20h					;look if you pressed the 'space' key
+		    je @@difficultyMenu    		
+		    jmp @@mainMenuChoise	;if no keystroke is detected remain in this loop
+	
 		@@stats:
 			call menuDisplay,2,5,2,15,10,0
-			jmp @@staticLoop
-
+			jmp @@staticMenuLoop
+	
 		@@rules:
 			call menuDisplay,1,0,0,17,1,0
 		
-		@@staticLoop:
-			call gameInteractions
-			movzx ebx, [currentMenu]
-			cmp ebx,0
+		@@staticMenuLoop:
+			mov ah,08h
+		    int 21h
+			cmp al,'b'			;look if you pressed the 'b' key
 			je @@mainMenu
-			jmp @@staticLoop
+			jmp @@staticMenuLoop ;if no keystroke is detected remain in this loop
 		
-		@@difficulty:
+		@@difficultyMenu:
 			call menuDisplay,5,2,6,8,6,0
-		
-		@@difficultyLoop:
-			call gameInteractions
-			movzx ebx, [currentMenu]
-			cmp ebx,0
-			je @@mainMenu
-			cmp ebx,5
-			je @@choise
-			jmp @@difficultyLoop
-
-		@@choise:
-			movzx ebx, [exp]
-			call adaptField,ebx
-			call menuDisplay,3,5,1,10,10,0
-
-		@@choiseLoop:	
-			call gameInteractions
-			movzx ebx, [currentMenu]
-			cmp ebx,1
+	
+		@@difficltyLoop:
+			mov ah,08h
+		    int 21h
+			cmp al, '1'
+			jge @@adaptField
+			cmp al,1Bh
 			je @@exit
-			cmp ebx,4
-			je @@difficulty
-			cmp ebx,6
-			je @@screenGame
-			jmp @@choiseLoop
-		
-		@@screenGame:
-			movzx edx,[setting]
-			movzx ecx,[colors+edx*2];color of player you chose to start
-			call menuDisplay,6,0,2,14,12,ecx
-			;add edx,'0'
-			;call moveCursor,18,18
-			;call printChar,1,edx
+			jmp @@difficltyLoop;if no keystroke is detected remain in this loop
 
-		@@gameplayLoop:
-			call gameInteractions
-			movzx ebx, [currentMenu]
-			cmp ebx,0
+		@@adaptField:
+			cmp al, 'b'
 			je @@mainMenu
-			jmp @@gameplayLoop
+			cmp al, [difficultyInput]
+			jge @@difficltyLoop
+			sub al, '1' ;get the value you presed
+			call adaptField,eax
 
+		@@choisePlayer:
+			call menuDisplay,3,5,1,10,10,0
+		
+		@@choiseLoop:
+			mov ah,08h
+		    int 21h
+			cmp al,'1'	;look if you pressed the '1' key
+			je @@setup1
+			cmp al,'2'	;look if you pressed the '2' key
+			je @@setup2
+			cmp al,'b'			;look if you pressed the 'b' key
+			je @@difficultyMenu
+			jmp @@choiseLoop;if no keystroke is detected remain in this loop
+		
+		@@setup1:
+			movzx edx,[colors+3*2];color of player1
+			jmp @@screenGame
+		
+		@@setup2:
+			movzx edx,[colors+4*2];color of player2
+	
+		@@screenGame:
+			call menuDisplay,6,0,2,14,12,edx
+
+		@@game:
+			mov ah,08h
+		    int 21h
+			cmp al,[validateInput]
+			jl @@moveWhere
+			cmp al,'d' ;look if you pressed the 'd' key
+			je short @@undo
+			cmp al,'p'			;look if you pressed the 'p' key
+			je @@paused
+			jmp @@game;if no keystroke is detected remain in this loop
+
+		@@paused:
+			call menuDisplay,4,10,0,17,15,0
+
+		@@pauseLoop:
+			mov ah,08h
+	    	int 21h
+			cmp al,'u'			;look if you pressed the 'u' key
+			je @@restore
+			jmp @@pauseLoop
+		
+		@@restore:
+			call menuDisplay,6,0,2,14,12,edx
+			call restoreField
+			jmp @@game
+
+		@@restart:
+			movzx ebx,al
+			mov[statusGrid],0
+			call clearGrid
+			cmp ebx,'m'
+			je @@mainMenu
+			cmp ebx,'s'
+			je @@stats
+			jmp @@choisePlayer
+	
+		@@moveWhere:
+			cmp al,'0'
+			jge @@move
+	    	jmp @@game
+			
+		@@undo:;statusGrid is where you hold the state if the previous move has been undone or not
+			cmp[statusGrid+1],1;1 is to reprensent that you did make an undo
+			je @@game
+			call makeMove,ebx,0,1
+			mov[statusGrid+1],1
+			jmp @@turnChange
+		
+		@@move:
+			mov ecx,[firstTop]
+			mov [statusGrid+1],0;0 is to reprensent tha you did not make an undo 
+			movzx ebx,al
+			sub ebx,'0'
+			;since the values of the keys are inbetween 0-9 and the vals to access the grid are between 0-9
+			;you need to correct ebx to access the correct vals from the grid by subtratcing the hexadecimal value off 1 from ebx.
+			add ecx,ebx
+			cmp [field+ecx],0
+			jne @@game
+			call makeMove,ebx,edx,0
+		
+		@@turnChange:
+			call gameStatus
+			cmp [statusGrid],0
+			jne @@gameEnded
+			call changeTurn,edx
+			cmp dx,[colors+3*2]
+			je @@p1
+			movzx edx,[colors+3*2]
+			jmp @@game
+	
+		@@p1:
+			movzx edx,[colors+4*2]
+			jmp @@game
+	
+		@@noWinner:
+			movzx edx,[colors]
+			jmp @@anounce
+
+		@@gameEnded:
+			cmp [statusGrid],3
+			je @@noWinner
+
+		@@anounce:
+			call menuDisplay,7,0,3,0,16,edx
+	
+		@@endGame:
+			mov ah,08h
+		    int 21h
+			cmp al,'e'			;look if you pressed the 'e' key
+			je @@restart
+			cmp al,'m'			;look if you pressed the 'm' key
+			je @@restart
+			cmp al,'s' ;look if you pressed the 's' key
+			je @@restart
+			cmp al,1Bh			;look if you pressed the 'esc' key
+			je @@exit
+			jmp @@endGame
+	
 		@@exit:
 			movzx edx,[colors+2*2]
 			call mouse_uninstall
@@ -255,18 +207,11 @@ endp gameInteractions
 			call setVideoMode,13h
 	    	call fillBackground,[colors];black
  			call mouse_install, offset mouseHandler
-			call __keyb_installKeyboardHandler
 			call game
 	endp main
 
 DATASEG
 		;indicate the last valid input in chose difficulty level
 		difficultyInput db '8'
-		;current menu
-		currentMenu db 0
-		;exp chosen
-		exp db 0
-		;setup chosen
-		setting db 0
 Stack 100h
 END main
