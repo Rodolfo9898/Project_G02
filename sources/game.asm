@@ -18,7 +18,7 @@ CODESEG
 	    	pop	es
 			call setVideoMode,13h
 	    	call fillBackground,[colors];black
- 			call mouse_install, offset mouseHandler
+ 			;call mouse_install, offset mouseHandler
 			call __keyb_installKeyboardHandler
 			call game
 	endp main
