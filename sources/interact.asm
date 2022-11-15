@@ -17,10 +17,12 @@ CODESEG
 ;actual game engine
 	proc game
 		USES eax,ebx,ecx,edx
-			
+
+			call displayMouse
+
 		@@mainMenu:
 			call menuDisplay,0,5,3,15,10,0
-			call displayMouse
+			
 		
 		@@mainMenuChoise:
 			call keysInput
@@ -57,53 +59,46 @@ CODESEG
 			movzx ebx,[currentMenu]
 			cmp ebx,0
 			je @@mainMenu
-			;mov ah,08h
-		    ;int 21h
-			;cmp al, '1'
-			;jge @@adaptField
+			cmp ebx,5
+			je @@adaptField
 			jmp @@difficltyLoop;if no keystroke is detected remain in this loop
 
 		@@adaptField:
-			cmp al, 'b'
-			je @@mainMenu
-			cmp al, [difficultyInput]
-			jge @@difficltyLoop
-			sub al, '1' ;get the value you presed
+			movzx eax,[fieldType]
 			call adaptField,eax
 
 		@@choisePlayer:
 			call menuDisplay,3,5,1,10,10,0
 		
 		@@choiseLoop:
-			mov ah,08h
-		    int 21h
-			cmp al,'1'	;look if you pressed the '1' key
-			je @@setup1
-			cmp al,'2'	;look if you pressed the '2' key
-			je @@setup2
-			cmp al,'b'			;look if you pressed the 'b' key
-			je @@difficulty
+			call keysInput
+			movzx ebx,[currentMenu]
+			cmp ebx,4
+			je @@mainMenu
+			cmp ebx,6
+			je @@setup
 			jmp @@choiseLoop;if no keystroke is detected remain in this loop
 		
-		@@setup1:
-			movzx edx,[colors+3*2];color of player1
-			jmp @@screenGame
-		
-		@@setup2:
-			movzx edx,[colors+4*2];color of player2
+		@@setup:
+			movzx ecx,[playerColor]
+			movzx edx,[colors+2*ecx]; the color of the player you want to start
 	
 		@@screenGame:
 			call menuDisplay,6,0,2,14,12,edx
 
 		@@game:
-			mov ah,08h
-		    int 21h
-			cmp al,[validateInput]
-			jl @@moveWhere
-			cmp al,'d' ;look if you pressed the 'd' key
-			je short @@undo
-			cmp al,'p'			;look if you pressed the 'p' key
-			je @@paused
+			call keysInput
+			movzx ebx,[currentMenu]
+			cmp ebx,1
+			je @@exit
+			;mov ah,08h
+		    ;int 21h
+			;cmp al,[validateInput]
+			;jl @@moveWhere
+			;cmp al,'d' ;look if you pressed the 'd' key
+			;je short @@undo
+			;cmp al,'p'			;look if you pressed the 'p' key
+			;je @@paused
 			jmp @@game;if no keystroke is detected remain in this loop
 
 		@@paused:

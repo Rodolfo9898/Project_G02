@@ -153,32 +153,49 @@ CODESEG
 			jmp @@noKey
 		
 		@@menus:
+			movzx ebx,[currentMenu]
 			cmp ebx,4
 			je @@difficulty
+			cmp ebx,5
+			je @@choise
 			jmp @@noKey
 		
 		@@difficulty:
-			cmp ecx,08h
+			cmp ecx,08h ;number 7
 			jle @@interactionDifficulty
 			jmp @@noKey
 		
 		@@interactionDifficulty:
-			mov al, [__keyb_keyboardState + ecx] ; number 1
+			mov al, [__keyb_keyboardState + ecx] ; number pressed down
             cmp al, 1	; if 1 = key pressed
 			je @@changeDifficulty
 			jmp @@noKey
 		
 		@@changeDifficulty:
-			mov [currentMenu],0
-
+			sub ecx,02h ;get the actual value from the keyu you presed
+			mov [fieldType],cl
+			mov [currentMenu],5
+			jmp @@noKey
+		
+		@@choise:
+			cmp ecx,03h ;number 2
+			jle @@interactionChoise
+			jmp @@noKey
+		
+		@@interactionChoise:
+			add ecx,01h
+			mov [playerColor],cl
+			mov [currentMenu],6
+			
 		@@noKey:
 			ret
 
     endp numbersInput
 
-;handle the other keysinputs
+;handle the menuNavigation
     proc menuNavigation
         USES eax,ebx
+			movzx ebx,[currentMenu]
 
             cmp ebx,0
             je @@main
@@ -190,9 +207,15 @@ CODESEG
             je @@statistics
             cmp ebx,4
             je @@difficulty
+			cmp ebx,5
+			je @@choise
+			cmp ebx,6
+			je @@inGame
             jmp @@noKey
 
         @@main:
+			cmp ebx,5
+			je @@difficulty
             mov [currentMenu],0
 
         @@mainMenu:
@@ -220,17 +243,31 @@ CODESEG
 
         @@difficulty:
             mov[currentMenu],4
+			jmp @@numberInteractionsMenu
+		
+		@@choise:
+			mov[currentMenu],5
 			
-        @@difficultyMenu:
+        @@numberInteractionsMenu:
 			movzx eax,[__keyb_rawScanCode]
             call numbersInput,eax
-			
+			jmp @@staticMenu
+					
         @@staticMenu:
             mov al, [__keyb_keyboardState + 30h] ;letter b
             cmp al, 1	; if 1 = key pressed
             je @@main
             jmp @@noKey
         
+		@@inGame:
+			mov [currentMenu],6
+
+		@@inGameMenu:
+			mov al, [__keyb_keyboardState + 30h] ;letter b
+            cmp al, 1	; if 1 = key pressed
+            je @@exit
+            jmp @@noKey
+
         @@exit: 
             mov [currentMenu],1
 
@@ -250,12 +287,16 @@ CODESEG
 DATASEG
     ;current menu you are watching
         currentMenu db 0
+	;field chosen to play on
+		fieldType db 0
+	;player you chose to start
+		playerColor db 0
     ; scancode values				
-	    keybscancodes 	db 29h, 02h, 03h, 04h, 05h, 06h, 07h, 08h, 09h, 0Ah, 0Bh, 0Ch, 0Dh, 0Eh, 	52h, 47h, 49h, 	45h, 35h, 00h, 4Ah
-					db 0Fh, 10h, 11h, 12h, 13h, 14h, 15h, 16h, 17h, 18h, 19h, 1Ah, 1Bh, 		53h, 4Fh, 51h, 	47h, 48h, 49h, 		1Ch, 4Eh
-					db 3Ah, 1Eh, 1Fh, 20h, 21h, 22h, 23h, 24h, 25h, 26h, 27h, 28h, 2Bh,    						4Bh, 4Ch, 4Dh
-					db 2Ah, 00h, 2Ch, 2Dh, 2Eh, 2Fh, 30h, 31h, 32h, 33h, 34h, 35h, 36h,  			 48h, 		4Fh, 50h, 51h,  1Ch
-					db 1Dh, 0h, 38h,  				39h,  				0h, 0h, 0h, 1Dh,  		4Bh, 50h, 4Dh,  52h, 53h
+	    keybscancodes db 29h, 02h, 03h, 04h, 05h, 06h, 07h, 08h, 09h, 0Ah, 0Bh, 0Ch, 0Dh, 0Eh, 	52h, 47h, 49h, 	45h, 35h, 00h, 4Ah
+					  db 0Fh, 10h, 11h, 12h, 13h, 14h, 15h, 16h, 17h, 18h, 19h, 1Ah, 1Bh, 		53h, 4Fh, 51h, 	47h, 48h, 49h, 		1Ch, 4Eh
+					  db 3Ah, 1Eh, 1Fh, 20h, 21h, 22h, 23h, 24h, 25h, 26h, 27h, 28h, 2Bh,    						4Bh, 4Ch, 4Dh
+					  db 2Ah, 00h, 2Ch, 2Dh, 2Eh, 2Fh, 30h, 31h, 32h, 33h, 34h, 35h, 36h,  			 48h, 		4Fh, 50h, 51h,  1Ch
+					  db 1Dh, 0h, 38h,  				39h,  				0h, 0h, 0h, 1Dh,  		4Bh, 50h, 4Dh,  52h, 53h
     ;originalkeyboard    
         originalKeyboardHandlerS	dw ?			; SELECTOR of original keyboard handler
         originalKeyboardHandlerO	dd ?			; OFFSET of original keyboard handler
