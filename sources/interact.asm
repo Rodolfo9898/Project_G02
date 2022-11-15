@@ -32,17 +32,7 @@ CODESEG
 			cmp ebx,3
 			je @@stats
 			cmp ebx,4
-			je @@difficulty
-		    ;mov ah,08h
-		    ;int 21h
-		    ;cmp al, 1Bh 				;look if you pressed the 'escape' key
-		    ;je @@exit
-			;cmp al,'r'					;look if you pressed the 'r' key
-		    ;je @@rules
-			;cmp al,'s'					;look if you pressed the 's' key
-		    ;je @@stats
-	   		;cmp al,20h					;look if you pressed the 'space' key
-		    ;je @@difficultyMenu    		
+			je @@difficulty		
 		    jmp @@mainMenuChoise	;if no keystroke is detected remain in this loop
 	
 		@@stats:
@@ -57,10 +47,6 @@ CODESEG
 			movzx ebx,[currentMenu]
 			cmp ebx,0
 			je @@mainMenu
-			;mov ah,08h
-		    ;int 21h
-			;cmp al,'b'			;look if you pressed the 'b' key
-			;je @@mainMenu
 			jmp @@staticMenuLoop ;if no keystroke is detected remain in this loop
 		
 		@@difficulty:

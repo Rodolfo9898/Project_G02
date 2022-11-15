@@ -4,6 +4,7 @@ MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
 include "keys.inc"
+include "print.inc"
 
 CODESEG
 ; Installs the custom keyboard handler
@@ -139,22 +140,50 @@ CODESEG
 
 ;handle the number input
     proc numbersInput
-        ARG @@keyinput:byte
-        USES eax,ebx,ecx,edx
+        ARG @@keyInput:byte
+        USES eax,ebx,ecx
+			movzx ecx,[@@keyInput]
+			cmp ecx,0bh ;last valid number key
+			jle @@number
+			jmp @@noKey
+		
+		@@number:
+			cmp ecx,02h; first number input
+			jge @@menus
+			jmp @@noKey
+		
+		@@menus:
+			cmp ebx,4
+			je @@difficulty
+			jmp @@noKey
+		
+		@@difficulty:
+			cmp ecx,08h
+			jle @@interactionDifficulty
+			jmp @@noKey
+		
+		@@interactionDifficulty:
+			mov al, [__keyb_keyboardState + ecx] ; number 1
+            cmp al, 1	; if 1 = key pressed
+			je @@changeDifficulty
+			jmp @@noKey
+		
+		@@changeDifficulty:
+			mov [currentMenu],0
 
-
-
+		@@noKey:
+			ret
 
     endp numbersInput
 
 ;handle the other keysinputs
-    proc normalKeysInput
+    proc menuNavigation
         USES eax,ebx
 
             cmp ebx,0
             je @@main
             cmp ebx,1
-            je short @@exit
+            je @@exit
             cmp ebx,2
             je @@rules
             cmp ebx,3
@@ -191,10 +220,11 @@ CODESEG
 
         @@difficulty:
             mov[currentMenu],4
-
+			
         @@difficultyMenu:
-            ;call numbersInput,eax
-    
+			movzx eax,[__keyb_rawScanCode]
+            call numbersInput,eax
+			
         @@staticMenu:
             mov al, [__keyb_keyboardState + 30h] ;letter b
             cmp al, 1	; if 1 = key pressed
@@ -207,13 +237,12 @@ CODESEG
         @@noKey:
             ret
 
-    endp normalKeysInput
+    endp menuNavigation
 
 ;handle all the valid keyinputs
     proc keysInput
 
-        call normalKeysInput
-        ;call numbersInput
+        call menuNavigation
         ret
 
     endp keysInput
