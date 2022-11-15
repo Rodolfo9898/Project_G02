@@ -138,6 +138,16 @@ CODESEG
 
     ENDP keyboardHandler
 
+;delay the keyboard read
+	proc delay
+		USES eax,ecx,edx
+			MOV     CX, 05H
+			MOV     DX, 100H
+			MOV     AH, 86H
+			INT     15H
+			ret
+	endp delay
+
 ;handle the number input
     proc numbersInput
         ARG @@keyInput:byte
@@ -175,6 +185,7 @@ CODESEG
 			sub ecx,02h ;get the actual value from the keyu you presed
 			mov [fieldType],cl
 			mov [currentMenu],5
+			call delay
 			jmp @@noKey
 		
 		@@choise:
@@ -186,6 +197,7 @@ CODESEG
 			add ecx,01h
 			mov [playerColor],cl
 			mov [currentMenu],6
+			call delay
 			
 		@@noKey:
 			ret
