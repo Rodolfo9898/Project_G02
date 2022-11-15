@@ -11,6 +11,7 @@ include "draw.inc"
 include "logic.inc"
 include "print.inc"
 include "interact.inc"
+include "keys.inc"
 
 CODESEG
 ;actual game engine
@@ -22,16 +23,26 @@ CODESEG
 			call displayMouse
 		
 		@@mainMenuChoise:
-		    mov ah,08h
-		    int 21h
-		    cmp al, 1Bh 				;look if you pressed the 'escape' key
-		    je @@exit
-			cmp al,'r'					;look if you pressed the 'r' key
-		    je @@rules
-			cmp al,'s'					;look if you pressed the 's' key
-		    je @@stats
-	   		cmp al,20h					;look if you pressed the 'space' key
-		    je @@difficultyMenu    		
+			call keysInput
+			movzx ebx,[currentMenu]
+			cmp ebx,1
+			je @@exit
+			cmp ebx,2
+			je @@rules
+			cmp ebx,3
+			je @@stats
+			cmp ebx,4
+			je @@difficulty
+		    ;mov ah,08h
+		    ;int 21h
+		    ;cmp al, 1Bh 				;look if you pressed the 'escape' key
+		    ;je @@exit
+			;cmp al,'r'					;look if you pressed the 'r' key
+		    ;je @@rules
+			;cmp al,'s'					;look if you pressed the 's' key
+		    ;je @@stats
+	   		;cmp al,20h					;look if you pressed the 'space' key
+		    ;je @@difficultyMenu    		
 		    jmp @@mainMenuChoise	;if no keystroke is detected remain in this loop
 	
 		@@stats:
@@ -42,22 +53,28 @@ CODESEG
 			call menuDisplay,1,0,0,17,1,0
 		
 		@@staticMenuLoop:
-			mov ah,08h
-		    int 21h
-			cmp al,'b'			;look if you pressed the 'b' key
+			call keysInput
+			movzx ebx,[currentMenu]
+			cmp ebx,0
 			je @@mainMenu
+			;mov ah,08h
+		    ;int 21h
+			;cmp al,'b'			;look if you pressed the 'b' key
+			;je @@mainMenu
 			jmp @@staticMenuLoop ;if no keystroke is detected remain in this loop
 		
-		@@difficultyMenu:
+		@@difficulty:
 			call menuDisplay,5,2,6,8,6,0
 	
 		@@difficltyLoop:
-			mov ah,08h
-		    int 21h
-			cmp al, '1'
-			jge @@adaptField
-			cmp al,1Bh
-			je @@exit
+			call keysInput
+			movzx ebx,[currentMenu]
+			cmp ebx,0
+			je @@mainMenu
+			;mov ah,08h
+		    ;int 21h
+			;cmp al, '1'
+			;jge @@adaptField
 			jmp @@difficltyLoop;if no keystroke is detected remain in this loop
 
 		@@adaptField:
@@ -79,7 +96,7 @@ CODESEG
 			cmp al,'2'	;look if you pressed the '2' key
 			je @@setup2
 			cmp al,'b'			;look if you pressed the 'b' key
-			je @@difficultyMenu
+			je @@difficulty
 			jmp @@choiseLoop;if no keystroke is detected remain in this loop
 		
 		@@setup1:
@@ -192,6 +209,7 @@ CODESEG
 	
 		@@exit:
 			movzx edx,[colors+2*2]
+			call __keyb_uninstallKeyboardHandler
 			call mouse_uninstall
 			call terminateProcess,edx,72
 			ret 
