@@ -214,36 +214,36 @@ CODESEG
     endp numbersInput
 
 ;handle number input in game
-	proc numberInputGame
-		ARG @@keyInput:byte
-        USES eax,ecx
-
-			movzx ecx,[@@keyInput]
-			cmp cl,[validEntry] ;last valid number key in scancodes this is number 0
-			jle @@number
-			jmp @@noKey
-
-		@@number:
-			cmp ecx,02h; first number input in scacode this is number 1
-			jge @@interaction
-			jmp @@noKey
-
-		@@interaction:
-			mov al, [__keyb_keyboardState + ecx] ; number pressed down
-           	cmp al, 1	; if 1 = key pressed
-			je @@move
-			jmp @@noKey
-		
-		@@move:
-			sub ecx,02h ;get the actual value from the keyu you presed
-			mov [movingSpace],cl
-			mov [currentMenu],8
-			call delay
-		
-		@@noKey:
-			ret
-
-	endp numberInputGame
+;	proc numberInputGame
+;		ARG @@keyInput:byte
+;        USES eax,ecx
+;
+;			movzx ecx,[@@keyInput]
+;			cmp cl,[validEntry] ;last valid number key in scancodes this is number 0
+;			jle @@number
+;			jmp @@noKey
+;
+;		@@number:
+;			cmp ecx,02h; first number input in scacode this is number 1
+;			jge @@interaction
+;			jmp @@noKey
+;
+;		@@interaction:
+;			mov al, [__keyb_keyboardState + ecx] ; number pressed down
+;          	cmp al, 1	; if 1 = key pressed
+;			je @@move
+;			jmp @@noKey
+;		
+;		@@move:
+;			sub ecx,02h ;get the actual value from the keyu you presed
+;			mov [movingSpace],cl
+;			mov [currentMenu],8
+;			call delay
+;		
+;		@@noKey:
+;			ret
+;
+;	endp numberInputGame
 
 ;handle the menuNavigation
     proc menuNavigation
