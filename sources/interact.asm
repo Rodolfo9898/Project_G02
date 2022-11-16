@@ -89,25 +89,24 @@ CODESEG
 		@@game:
 			call keysInput
 			movzx ebx,[currentMenu]
+			cmp ebx,7
+			je @@paused
+			;;;debugging
 			cmp ebx,1
 			je @@exit
-			;mov ah,08h
-		    ;int 21h
 			;cmp al,[validateInput]
 			;jl @@moveWhere
 			;cmp al,'d' ;look if you pressed the 'd' key
 			;je short @@undo
-			;cmp al,'p'			;look if you pressed the 'p' key
-			;je @@paused
 			jmp @@game;if no keystroke is detected remain in this loop
 
 		@@paused:
 			call menuDisplay,4,10,0,17,15,0
 
 		@@pauseLoop:
-			mov ah,08h
-	    	int 21h
-			cmp al,'u'			;look if you pressed the 'u' key
+			call keysInput
+			movzx ebx,[currentMenu]
+			cmp ebx,6
 			je @@restore
 			jmp @@pauseLoop
 		
@@ -120,7 +119,7 @@ CODESEG
 			movzx ebx,al
 			mov[statusGrid],0
 			call clearGrid
-			cmp ebx,'m'
+			cmp ebx,'l'
 			je @@mainMenu
 			cmp ebx,'s'
 			je @@stats
@@ -140,7 +139,7 @@ CODESEG
 		
 		@@move:
 			mov ecx,[firstTop]
-			mov [statusGrid+1],0;0 is to reprensent tha you did not make an undo 
+			mov [statusGrid+1],0;0 is to reprensent that you did not make an undo 
 			movzx ebx,al
 			sub ebx,'0'
 			;since the values of the keys are inbetween 0-9 and the vals to access the grid are between 0-9
@@ -180,7 +179,7 @@ CODESEG
 		    int 21h
 			cmp al,'e'			;look if you pressed the 'e' key
 			je @@restart
-			cmp al,'m'			;look if you pressed the 'm' key
+			cmp al,'l'			;look if you pressed the 'm' key
 			je @@restart
 			cmp al,'s' ;look if you pressed the 's' key
 			je @@restart

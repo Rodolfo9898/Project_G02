@@ -4,7 +4,6 @@ MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
 include "keys.inc"
-include "print.inc"
 
 CODESEG
 ; Installs the custom keyboard handler
@@ -139,6 +138,7 @@ CODESEG
     ENDP keyboardHandler
 
 ;delay the keyboard read
+;source http://vitaly_filatov.tripod.com/ng/asm/asm_026.13.html
 	proc delay
 		USES eax,ecx,edx
 			MOV     CX, 05H
@@ -148,17 +148,17 @@ CODESEG
 			ret
 	endp delay
 
-;handle the number input
+;handle the number input in menus
     proc numbersInput
         ARG @@keyInput:byte
         USES eax,ebx,ecx
 			movzx ecx,[@@keyInput]
-			cmp ecx,0bh ;last valid number key
+			cmp ecx,0bh ;last valid number key in scancodes this is number 0
 			jle @@number
 			jmp @@noKey
 		
 		@@number:
-			cmp ecx,02h; first number input
+			cmp ecx,02h; first number input in scacode this is number 1
 			jge @@menus
 			jmp @@noKey
 		
@@ -172,37 +172,78 @@ CODESEG
 		
 		@@difficulty:
 			cmp ecx,08h ;number 7
-			jle @@interactionDifficulty
-			jmp @@noKey
-		
-		@@interactionDifficulty:
-			mov al, [__keyb_keyboardState + ecx] ; number pressed down
-            cmp al, 1	; if 1 = key pressed
-			je @@changeDifficulty
-			jmp @@noKey
-		
-		@@changeDifficulty:
-			sub ecx,02h ;get the actual value from the keyu you presed
-			mov [fieldType],cl
-			mov [currentMenu],5
-			call delay
+			jle @@interaction
 			jmp @@noKey
 		
 		@@choise:
 			cmp ecx,03h ;number 2
-			jle @@interactionChoise
+			jle @@interaction
 			jmp @@noKey
-		
-		@@interactionChoise:
-			add ecx,01h
+
+
+		@@interaction:
+			mov al, [__keyb_keyboardState + ecx] ; number pressed down
+           	cmp al, 1	; if 1 = key pressed
+			je @@change
+			jmp @@noKey
+
+		@@change:
+			cmp ebx,4
+			je @@changeDifficulty
+			cmp ebx,5
+			je @@changeChoise
+			jmp @@noKey
+
+		@@changeDifficulty:
+			sub ecx,02h ;get the actual value from the keyu you presed
+			mov [fieldType],cl
+			mov [currentMenu],5
+			jmp @@delay
+
+		@@changeChoise:
+			add ecx,01h; you need to access in the arrar colors pos 3 or 4 so you add 1 after the choise is done becuase of the scancode values 02h and 03h
 			mov [playerColor],cl
 			mov [currentMenu],6
+		
+		@@delay:
 			call delay
-			
+		
 		@@noKey:
 			ret
 
     endp numbersInput
+
+;handle number input in game
+	proc numberInputGame
+		ARG @@keyInput:byte
+        USES eax,ecx
+
+			movzx ecx,[@@keyInput]
+			cmp cl,[validEntry] ;last valid number key in scancodes this is number 0
+			jle @@number
+			jmp @@noKey
+
+		@@number:
+			cmp ecx,02h; first number input in scacode this is number 1
+			jge @@interaction
+			jmp @@noKey
+
+		@@interaction:
+			mov al, [__keyb_keyboardState + ecx] ; number pressed down
+           	cmp al, 1	; if 1 = key pressed
+			je @@move
+			jmp @@noKey
+		
+		@@move:
+			sub ecx,02h ;get the actual value from the keyu you presed
+			mov [movingSpace],cl
+			mov [currentMenu],8
+			call delay
+		
+		@@noKey:
+			ret
+
+	endp numberInputGame
 
 ;handle the menuNavigation
     proc menuNavigation
@@ -223,6 +264,10 @@ CODESEG
 			je @@choise
 			cmp ebx,6
 			je @@inGame
+			cmp ebx,7
+			je @@pause
+			;cmp ebx,8
+			;je @@move
             jmp @@noKey
 
         @@main:
@@ -273,11 +318,29 @@ CODESEG
         
 		@@inGame:
 			mov [currentMenu],6
+			
+		
+		;@@gameplay:
+			;mov eax,[__keyb_rawScanCode]
+            ;call numbersInput,eax
 
 		@@inGameMenu:
+			mov al, [__keyb_keyboardState + 19h] ;letter p
+            cmp al, 1	; if 1 = key pressed
+            je @@pause
+			;;;;;debugging
 			mov al, [__keyb_keyboardState + 30h] ;letter b
             cmp al, 1	; if 1 = key pressed
-            je @@exit
+            je @@exit 
+            jmp @@noKey
+
+		@@pause:
+			mov [currentMenu],7
+		
+		@@pauseMenu:
+			mov al, [__keyb_keyboardState + 16h] ;letter u
+            cmp al, 1	; if 1 = key pressed
+            je @@inGame
             jmp @@noKey
 
         @@exit: 
@@ -303,6 +366,10 @@ DATASEG
 		fieldType db 0
 	;player you chose to start
 		playerColor db 0
+	; last valid input for the array
+		validEntry db 08h ;number 7
+	; move where
+		movingSpace db 0
     ; scancode values				
 	    keybscancodes db 29h, 02h, 03h, 04h, 05h, 06h, 07h, 08h, 09h, 0Ah, 0Bh, 0Ch, 0Dh, 0Eh, 	52h, 47h, 49h, 	45h, 35h, 00h, 4Ah
 					  db 0Fh, 10h, 11h, 12h, 13h, 14h, 15h, 16h, 17h, 18h, 19h, 1Ah, 1Bh, 		53h, 4Fh, 51h, 	47h, 48h, 49h, 		1Ch, 4Eh

@@ -4,4 +4,6 @@ global keysInput:proc,\
 
 global currentMenu:byte,\
        fieldType:byte,\
-       playerColor:byte 
+       playerColor:byte,\
+       movingSpace:byte,\
+       validEntry:byte 
