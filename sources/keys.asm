@@ -246,7 +246,7 @@ CODESEG
 ;	endp numberInputGame
 
 ;handle the menuNavigation
-    proc menuNavigation
+    proc keysMenuNavigation
         USES eax,ebx
 			movzx ebx,[currentMenu]
 
@@ -349,15 +349,7 @@ CODESEG
         @@noKey:
             ret
 
-    endp menuNavigation
-
-;handle all the valid keyinputs
-    proc keysInput
-
-        call menuNavigation
-        ret
-
-    endp keysInput
+    endp keysMenuNavigation
 
 DATASEG
     ;current menu you are watching

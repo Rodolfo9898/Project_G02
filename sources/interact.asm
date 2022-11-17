@@ -14,6 +14,13 @@ include "interact.inc"
 include "keys.inc"
 
 CODESEG
+;game interactions
+	proc interact
+		call keysMenuNavigation
+		ret 
+	endp interact
+
+
 ;actual game engine
 	proc game
 		USES eax,ebx,ecx,edx
@@ -25,7 +32,7 @@ CODESEG
 			
 		
 		@@mainMenuChoise:
-			call keysInput
+			call interact
 			movzx ebx,[currentMenu]
 			cmp ebx,1
 			je @@exit
@@ -45,7 +52,7 @@ CODESEG
 			call menuDisplay,1,0,0,17,1,0
 		
 		@@staticMenuLoop:
-			call keysInput
+			call interact
 			movzx ebx,[currentMenu]
 			cmp ebx,0
 			je @@mainMenu
@@ -55,7 +62,7 @@ CODESEG
 			call menuDisplay,5,2,6,8,6,0
 	
 		@@difficltyLoop:
-			call keysInput
+			call interact
 			movzx ebx,[currentMenu]
 			cmp ebx,0
 			je @@mainMenu
@@ -71,7 +78,7 @@ CODESEG
 			call menuDisplay,3,5,1,10,10,0
 		
 		@@choiseLoop:
-			call keysInput
+			call interact
 			movzx ebx,[currentMenu]
 			cmp ebx,4
 			je @@mainMenu
@@ -87,7 +94,7 @@ CODESEG
 			call menuDisplay,6,0,2,14,12,edx
 
 		@@game:
-			call keysInput
+			call interact
 			movzx ebx,[currentMenu]
 			cmp ebx,7
 			je @@paused
@@ -104,7 +111,7 @@ CODESEG
 			call menuDisplay,4,10,0,17,15,0
 
 		@@pauseLoop:
-			call keysInput
+			call interact
 			movzx ebx,[currentMenu]
 			cmp ebx,6
 			je @@restore
