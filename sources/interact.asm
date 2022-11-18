@@ -14,14 +14,6 @@ include "interact.inc"
 include "keys.inc"
 
 CODESEG
-;game interactions
-	proc interact
-		call keysMenuNavigation
-		;call buttonInteraction
-		ret 
-	endp interact
-
-
 ;actual game engine
 	proc game
 		USES eax,ebx,ecx,edx
@@ -30,7 +22,9 @@ CODESEG
 
 		@@mainMenu:
 			call menuDisplay,0,5,3,15,10,0
-			call drawRectangle,95,79,130,11,14,0
+
+			;used for debbiging to get the correct x and y values for the buttons
+			;call drawRectangle,95,79,130,11,14,0
 			;95 van links naar rechts x
 			;79 van boven naar onder  y 
 			;130 breedte
@@ -38,11 +32,8 @@ CODESEG
 			;14 gele kleur
 			;0 niet filled
 
-
-			
-		
 		@@mainMenuChoise:
-			call interact
+			call keysMenuNavigation
 			movzx ebx,[currentMenu]
 			cmp ebx,1
 			je @@exit
@@ -62,7 +53,7 @@ CODESEG
 			call menuDisplay,1,0,0,17,1,0
 		
 		@@staticMenuLoop:
-			call interact
+			call keysMenuNavigation
 			movzx ebx,[currentMenu]
 			cmp ebx,0
 			je @@mainMenu
@@ -72,7 +63,7 @@ CODESEG
 			call menuDisplay,5,2,6,8,6,0
 	
 		@@difficltyLoop:
-			call interact
+			call keysMenuNavigation
 			movzx ebx,[currentMenu]
 			cmp ebx,0
 			je @@mainMenu
@@ -88,7 +79,7 @@ CODESEG
 			call menuDisplay,3,5,1,10,10,0
 		
 		@@choiseLoop:
-			call interact
+			call keysMenuNavigation
 			movzx ebx,[currentMenu]
 			cmp ebx,4
 			je @@mainMenu
@@ -104,7 +95,7 @@ CODESEG
 			call menuDisplay,6,0,2,14,12,edx
 
 		@@game:
-			call interact
+			call keysMenuNavigation
 			movzx ebx,[currentMenu]
 			cmp ebx,7
 			je @@paused
@@ -121,7 +112,7 @@ CODESEG
 			call menuDisplay,4,10,0,17,15,0
 
 		@@pauseLoop:
-			call interact
+			call keysMenuNavigation
 			movzx ebx,[currentMenu]
 			cmp ebx,6
 			je @@restore

@@ -13,4 +13,7 @@ global field:byte,\
        firstTop:dword,\
        horizontal:dword,\
        vertical:dword,\
-       colors:word
+       colors:word,\
+       currentMenu:byte,\
+       fieldType:byte,\
+       playerColor:byte

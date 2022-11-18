@@ -43,7 +43,7 @@ MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
 INCLUDE "mouse.inc"
-include "keys.inc"
+include "setup.inc"
 ;;;;global constants
 VMEMADR EQU 0A0000h	; video memory address
 SCRWIDTH EQU 320	; screen witdth
@@ -213,6 +213,8 @@ proc buttonInteraction
         je @@main
         jmp @@ignore
 
+    ;;it works for one button in main, now need to make procedure 
+    ;;to interpret  all buttons more genericly
     @@main:
     ;;inside the area of teh button?
         cmp dx,79; waarde van onder naar boven : y

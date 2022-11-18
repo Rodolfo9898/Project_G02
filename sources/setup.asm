@@ -72,5 +72,11 @@ DATASEG
 	;this are the colors used in the graphics
 	;the colors are: black,blue,white,yellow,purple and green
 		colors dw 0,1,15,14,13,2
+	;current menu you are watching
+        currentMenu db 0
+	;field chosen to play on
+		fieldType db 0
+	;player you chose to start
+		playerColor db 0
 
 END

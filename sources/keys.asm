@@ -4,6 +4,7 @@ MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
 include "keys.inc"
+include "setup.inc"
 
 CODESEG
 ; Installs the custom keyboard handler
@@ -352,12 +353,6 @@ CODESEG
     endp keysMenuNavigation
 
 DATASEG
-    ;current menu you are watching
-        currentMenu db 0
-	;field chosen to play on
-		fieldType db 0
-	;player you chose to start
-		playerColor db 0
 	;;tobe coorected with bugfix
 	; last valid input for the array
 	;	validEntry db 08h ;number 7
