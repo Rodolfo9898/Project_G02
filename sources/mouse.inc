@@ -42,4 +42,5 @@ GLOBAL 	mouse_install:proc,\
        	mouse_uninstall:proc,\
         displayMouse:proc,\
         hideMouse:proc,\
-        mouseHandler:proc
+        mouseHandler:proc,\
+        buttonInteraction:proc

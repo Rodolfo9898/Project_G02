@@ -43,6 +43,7 @@ MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
 INCLUDE "mouse.inc"
+include "keys.inc"
 ;;;;global constants
 VMEMADR EQU 0A0000h	; video memory address
 SCRWIDTH EQU 320	; screen witdth
@@ -204,6 +205,37 @@ proc mouseHandler
 	@@skipit:
     ret
 endp mouseHandler
+
+proc buttonInteraction
+    uses eax,ebx,ecx,edx,edi
+        movzx edi,[currentMenu]
+        cmp edi,0
+        je @@main
+        jmp @@ignore
+
+    @@main:
+    ;;inside the area of teh button?
+        cmp dx,79; waarde van onder naar boven : y
+        jl @@ignore
+        mov eax,11; hooghte
+        add ax, 79 ;originale waarde 
+        cmp dx,ax
+        jg @@ignore
+        sar cx, 1 ; the x coordinate is doubled so we divide by 2
+        cmp cx,95
+        jl @@ignore
+        mov eax,130;breedte
+        add ax, 95 ; originele waarde
+        cmp cx, ax 
+        jg @@ignore
+        ;;its inside now react accordingly
+        test bx,1
+        jz @@ignore; we dont use a right click in the menus
+        mov [currentMenu],4
+
+    @@ignore:
+        ret 
+endp buttonInteraction
 
 DATASEG
     ;mouse handler

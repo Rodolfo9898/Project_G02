@@ -17,6 +17,7 @@ CODESEG
 ;game interactions
 	proc interact
 		call keysMenuNavigation
+		;call buttonInteraction
 		ret 
 	endp interact
 
@@ -29,6 +30,15 @@ CODESEG
 
 		@@mainMenu:
 			call menuDisplay,0,5,3,15,10,0
+			call drawRectangle,95,79,130,11,14,0
+			;95 van links naar rechts x
+			;79 van boven naar onder  y 
+			;130 breedte
+			;11 hooghte
+			;14 gele kleur
+			;0 niet filled
+
+
 			
 		
 		@@mainMenuChoise:
@@ -197,7 +207,7 @@ CODESEG
 		@@exit:
 			movzx edx,[colors+2*2]
 			call __keyb_uninstallKeyboardHandler
-			;call mouse_uninstall
+			call mouse_uninstall
 			call terminateProcess,edx,72
 			ret 
 	endp game
