@@ -221,10 +221,32 @@ CODESEG
             je @@static
             cmp edi,3
             je @@static
+            cmp edi,4
+            je @@difficulty
+            cmp edi,5
+            je @@choise
+            ;;;add interpretation on the main game screen
+            cmp edi,7
+            je @@paused
             jmp @@ignore
 
         @@static:
             call possibleButtonClick,184,183,0
+            jmp  @@ignore
+
+        @@paused:
+            call possibleButtonClick,119,95,6
+            jmp  @@ignore
+
+        
+        @@difficulty:
+            ;;add interpretation for the numbers choises for adapt field
+            call possibleButtonClick,184,183,0
+            jmp  @@ignore
+
+        @@choise:
+            ;;add interpretation for the numbers choises for who starts
+            call possibleButtonClick,184,183,4
             jmp  @@ignore
 
         @@main:
