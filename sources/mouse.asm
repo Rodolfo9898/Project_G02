@@ -58,16 +58,16 @@ CODESEG
 ; RETURNS:
 ;   EAX     1 if mouse available
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-proc mouse_present
-    USES    ebx
+    proc mouse_present
+        USES    ebx
 
-    mov     eax, 0
-    int     33h
+        mov     eax, 0
+        int     33h
 
-    and     eax, 1
+        and     eax, 1
 
-    ret
-endp mouse_present
+        ret
+    endp mouse_present
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ; Internal mouse handler.
@@ -80,27 +80,27 @@ endp mouse_present
 ; RETURNS:
 ;   nothing
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-proc mouse_internal_handler NOLANGUAGE
-    push    ds
-    push    es
-    push    ax
+    proc mouse_internal_handler NOLANGUAGE
+        push    ds
+        push    es
+        push    ax
 
-    mov     ax, [cs:theDS]
-    mov     ds, ax
-    mov     es, ax
+        mov     ax, [cs:theDS]
+        mov     ds, ax
+        mov     es, ax
 
-    pop     ax
+     pop     ax
 
-    call    [custom_mouse_handler]
+        call    [custom_mouse_handler]
     
-    pop     es
-    pop     ds
+        pop     es
+        pop     ds
     
-    retf
+        retf
 
-    ; Internal variable to keep track of DS
-    theDS   dw  ?
-endp mouse_internal_handler
+        ; Internal variable to keep track of DS
+        theDS   dw  ?
+    endp mouse_internal_handler
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ; Install mouse handler.
@@ -110,35 +110,35 @@ endp mouse_internal_handler
 ; RETURNS:
 ;   nothing
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-proc mouse_install
-    ARG     @@custom_handler
-    USES    eax, ecx, edx, es
+    proc mouse_install
+        ARG     @@custom_handler
+        USES    eax, ecx, edx, es
 
-    call    mouse_present
-    cmp     eax, 1
-    jne     @@no_mouse
+            call    mouse_present
+            cmp     eax, 1
+            jne     @@no_mouse
 
-    mov     eax, [@@custom_handler]
-    mov     [custom_mouse_handler], eax
+            mov     eax, [@@custom_handler]
+            mov     [custom_mouse_handler], eax
 
-    push    ds
-    mov     ax, cs
-    mov     ds, ax
-    ASSUME  ds:_TEXT
-    mov     [theDS], ax
-    ASSUME  ds:FLAT
-    pop     ds
+            push    ds
+            mov     ax, cs
+            mov     ds, ax
+            ASSUME  ds:_TEXT
+            mov     [theDS], ax
+            ASSUME  ds:FLAT
+            pop     ds
 
-    mov     eax, 0ch
-    mov     ecx, 255
-    push    cs
-    pop     es
-    mov     edx, offset mouse_internal_handler
-    int     33h
+            mov     eax, 0ch
+            mov     ecx, 255
+            push    cs
+            pop     es
+            mov     edx, offset mouse_internal_handler
+            int     33h
 
-@@no_mouse:
-    ret
-endp mouse_install
+        @@no_mouse:
+            ret
+    endp mouse_install
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ; Uninstall mouse handler.
@@ -148,98 +148,98 @@ endp mouse_install
 ; RETURNS:
 ;   nothing
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-proc mouse_uninstall
-    USES    eax, ecx, edx
+    proc mouse_uninstall
+        USES    eax, ecx, edx
 
-    mov     eax, 0ch
-    mov     ecx, 0
-    mov     edx, 0
-    int     33h
+        mov     eax, 0ch
+        mov     ecx, 0
+        mov     edx, 0
+        int     33h
 
-    ret
-endp mouse_uninstall
+        ret
+    endp mouse_uninstall
 
-proc displayMouse
-	USES eax
-	mov ax, 01h
-	int 33h
-	ret
-endp displayMouse
+;display the mouse onto the screen
+    proc displayMouse
+	    USES eax
+	    mov ax, 01h
+	    int 33h
+	    ret
+    endp displayMouse
 
-proc hideMouse
-	USES eax
-	mov ax, 02h
-	int 33h
-	ret
-endp hideMouse
+;hide the mouse from the screen
+    proc hideMouse
+	    USES eax
+	    mov ax, 02h
+	    int 33h
+	    ret
+    endp hideMouse
 
-; ----------------------------------------------------------------------------
-; Mouse function
-; AX = condition mask causing call
-; CX = horizontal cursor position
-; DX = vertical cursor position
-; DI = horizontal counts
-; SI = vertical counts
-; BX = button state:
-;      |F-2|1|0|
-;        |  | `--- left button (1 = pressed)
-;        |  `---- right button (1 = pressed)
-;        `------ unused
-; DS = DATASEG
-; ES = DATASEG
-; ----------------------------------------------------------------------------
-proc mouseHandler
-    USES    eax, ebx, ecx, edx
-	
-	and bl, 3			; check for two mouse buttons (2 low end bits)
-	jz @@skipit			; only execute if a mousebutton is pressed
+;check if a button was clicked
+    proc possibleButtonClick
+        ARG @@yValue:byte,@@xValue:byte,@@button:byte
+        USES eax,ebx,ecx,edx,edi
+            HEIGHT EQU 11
+            WIDE EQU 130
+  
+            movzx edi,[@@yValue]; waarde van onder naar boven : y
+            cmp dx,di
+            jl @@ignore
+            
+            mov eax, HEIGHT; height 
+            add ax,di; original value
+            cmp dx,ax
+            jge @@ignore
+            
+            sar cx, 1 ; the x coordinate is doubled so we divide by 2
+            movzx edi,[@@xValue]; waarde van links naar rechts : x
+            cmp cx,di
+            jl @@ignore
+            
+            mov eax, WIDE; width
+            add ax,di; original value
+            cmp cx, ax 
+            jge @@ignore
+            
+            ;;its inside now react accordingly
+            test bx,1
+            jz @@ignore; we dont use a right click in the menus
+            movzx eax,[@@button]
+            mov [currentMenu],al
 
-    movzx eax, dx		; get mouse height
-	mov edx, SCRWIDTH
-	mul edx				; obtain vertical offset in eax
-	sar cx, 1			; horizontal cursor position is doubled in input 
-	add ax, cx			; add horizontal offset
-	add eax, VMEMADR	; eax now contains pixel address mouse is pointing to
-	mov [eax], bl		; change color
+        @@ignore:
+            ret 
+    endp possibleButtonClick
+    
+;mouse routine for the menus
+    proc buttonInteraction
+        uses eax,ebx,ecx,edx,edi
+            movzx edi,[currentMenu]
+            cmp edi,0
+            je @@main
+            cmp edi,2
+            je @@static
+            cmp edi,3
+            je @@static
+            jmp @@ignore
 
-	@@skipit:
-    ret
-endp mouseHandler
+        @@static:
+            call possibleButtonClick,184,183,0
+            jmp  @@ignore
 
-proc buttonInteraction
-    uses eax,ebx,ecx,edx,edi
-        movzx edi,[currentMenu]
-        cmp edi,0
-        je @@main
-        jmp @@ignore
+        @@main:
+            call possibleButtonClick,79,95,4
+            call possibleButtonClick,95,95,2
+            call possibleButtonClick,111,95,3
+            call possibleButtonClick,127,95,1
 
-    ;;it works for one button in main, now need to make procedure 
-    ;;to interpret  all buttons more genericly
-    @@main:
-    ;;inside the area of teh button?
-        cmp dx,79; waarde van onder naar boven : y
-        jl @@ignore
-        mov eax,11; hooghte
-        add ax, 79 ;originale waarde 
-        cmp dx,ax
-        jg @@ignore
-        sar cx, 1 ; the x coordinate is doubled so we divide by 2
-        cmp cx,95
-        jl @@ignore
-        mov eax,130;breedte
-        add ax, 95 ; originele waarde
-        cmp cx, ax 
-        jg @@ignore
-        ;;its inside now react accordingly
-        test bx,1
-        jz @@ignore; we dont use a right click in the menus
-        mov [currentMenu],4
-
-    @@ignore:
-        ret 
-endp buttonInteraction
+        @@ignore:
+            ret 
+    endp buttonInteraction
 
 DATASEG
+    ;clicked button
+        buttonClicked db 0
     ;mouse handler
         custom_mouse_handler    dd ?
 

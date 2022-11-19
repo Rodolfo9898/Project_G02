@@ -22,16 +22,7 @@ CODESEG
 
 		@@mainMenu:
 			call menuDisplay,0,5,3,15,10,0
-
-			;used for debbiging to get the correct x and y values for the buttons
-			call drawRectangle,95,95,130,11,14,0
-			;95 van links naar rechts x
-			;79 van boven naar onder  y 
-			;130 breedte
-			;11 hooghte
-			;14 gele kleur
-			;0 niet filled
-
+			
 		@@mainMenuChoise:
 			call keysMenuNavigation
 			movzx ebx,[currentMenu]
@@ -47,6 +38,7 @@ CODESEG
 	
 		@@stats:
 			call menuDisplay,2,5,2,15,10,0
+			call drawRectangle,184,183,130,11,14,0
 			jmp @@staticMenuLoop
 	
 		@@rules:
