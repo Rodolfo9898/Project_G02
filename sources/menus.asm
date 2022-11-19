@@ -58,7 +58,7 @@ CODESEG
 
 		@@start: ;start menu options
 			mov ebx,[menuMain+eax*4];the button you want
-			call makeButton,ebx,edx,ecx,12
+			call makeButton,ebx,edx,ecx,12,0
 		 	cmp eax,edi
 		 	je @@credits
 			add eax,1
@@ -88,7 +88,7 @@ CODESEG
 	
 		@@difficultyMenu:
 			mov ebx,[menuDifficulty+eax*4];text you want
-			call makeButton,ebx,edx,ecx,12
+			call makeButton,ebx,edx,ecx,12,0
 			cmp eax,edi
 			je @@back
 			add eax,1
@@ -99,7 +99,7 @@ CODESEG
 
 		@@choiceMenu:
 			mov ebx,[menuChoice+eax*4];text you want
-			call makeButton,ebx,edx,ecx,12
+			call makeButton,ebx,edx,ecx,12,0
 			cmp eax,edi
 			je @@back
 			add eax,1
@@ -115,7 +115,7 @@ CODESEG
 	
 		@@gameMenu:
 			mov ebx,[menuGame+eax*4];the button you want
-			call printString,ebx,edx,ecx,1
+			call makeButton,ebx,edx,ecx,1,1
 			cmp eax,edi
 		 	je @@grid
 			add eax,1
@@ -131,6 +131,7 @@ CODESEG
 			mov ebx,[menuAnnounce+eax*4]
 			cmp eax,2
 			je @@newButtons
+			;call makeButton,ebx,edx,ecx,1,1
 			call printString,ebx,edx,ecx,1
 			add eax,1
 			add ecx,2
@@ -138,6 +139,7 @@ CODESEG
 
 		@@newButtons:
 			mov ebx,[menuAnnounce+eax*4]
+			;call makeButton,ebx,edx,ecx,1,1
 			call printString,ebx,edx,ecx,38
 			cmp eax,edi
 			je @@playerAnnounce
@@ -160,12 +162,12 @@ CODESEG
 		@@back: ;back button is used by stats menu ,rules menu and choice menu hence it is a separate option
 			movzx edx,[colors+2*2]
 			mov ebx,offset back ;the back button
-			call makeButton,ebx,edx,23,23
+			call makeButton,ebx,edx,23,23,0
 			jmp @@end 
 
 		@@resume: ;pause menu options
 			mov ebx,offset resume;the resume button
-			call makeButton,ebx,edx,ecx,12
+			call makeButton,ebx,edx,ecx,12,0
 			jmp @@end
 
 		@@credits: ;credits have a different format that the buttons hence it is a separate option

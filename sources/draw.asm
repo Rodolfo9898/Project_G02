@@ -135,7 +135,7 @@ CODESEG
 ;draw a button 
 ;a button on screen is an action you can perform in the app
 	proc makeButton
-		ARG @@string:dword,@@color:word,@@row:byte,@@column:byte
+		ARG @@string:dword,@@color:word,@@row:byte,@@column:byte,@@smaller:byte 
 		USES eax,ebx,ecx,edx,edi
 	
 			mov eax,[@@string]
@@ -166,8 +166,17 @@ CODESEG
 			jmp @@adjustWidth
 	
 		@@mkButton:
-			movzx ecx, [buttonSize+1*3] ;width of the button
+			movzx ecx,[@@smaller]
 			movzx edx, [buttonSize+1*2] ;height of the button
+			cmp ecx,1
+			je @@inGame
+			movzx ecx, [buttonSize+1*3] ;width of the button
+			jmp @@draw
+			
+		@@inGame:
+			movzx ecx, [buttonSize+1*4] ;width of the button
+		
+		@@draw:
 			call drawRectangle,eax,ebx,ecx,edx,edi,0
 			ret 
 	endp makeButton
@@ -241,6 +250,6 @@ DATASEG
 		pieceDim dd 20
 	;these are the elments used to define a button
 	;the represent the following: how long is each letter in the box,how wide is each letter in the box,height of the box, width off the box
-		buttonSize db 7,8,11,130
+		buttonSize db 7,8,11,130,85
 
 END 

@@ -24,7 +24,7 @@ CODESEG
 			call menuDisplay,0,5,3,15,10,0
 
 			;used for debbiging to get the correct x and y values for the buttons
-			;call drawRectangle,95,79,130,11,14,0
+			call drawRectangle,95,95,130,11,14,0
 			;95 van links naar rechts x
 			;79 van boven naar onder  y 
 			;130 breedte
@@ -61,6 +61,15 @@ CODESEG
 		
 		@@difficulty:
 			call menuDisplay,5,2,6,8,6,0
+			;used for debbiging to get the correct x and y values for the buttons
+			;call drawRectangle,95,95,130,11,14,0
+			;95 van links naar rechts x
+			;79 van boven naar onder  y 
+			;130 breedte
+			;11 hooghte
+			;14 gele kleur
+			;0 niet filled
+			
 	
 		@@difficltyLoop:
 			call keysMenuNavigation
@@ -77,6 +86,14 @@ CODESEG
 
 		@@choisePlayer:
 			call menuDisplay,3,5,1,10,10,0
+			;used for debbiging to get the correct x and y values for the buttons
+			;call drawRectangle,95,95,130,11,14,0
+			;95 van links naar rechts x
+			;79 van boven naar onder  y 
+			;130 breedte
+			;11 hooghte
+			;14 gele kleur
+			;0 niet filled
 		
 		@@choiseLoop:
 			call keysMenuNavigation
@@ -93,6 +110,14 @@ CODESEG
 	
 		@@screenGame:
 			call menuDisplay,6,0,2,14,12,edx
+			;used for debbiging to get the correct x and y values for the buttons
+			;call drawRectangle,6,95,85,11,14,0
+			;95 van links naar rechts x
+			;79 van boven naar onder  y 
+			;130 breedte
+			;11 hooghte
+			;14 gele kleur
+			;0 niet filled
 
 		@@game:
 			call keysMenuNavigation
@@ -110,6 +135,15 @@ CODESEG
 
 		@@paused:
 			call menuDisplay,4,10,0,17,15,0
+			;used for debbiging to get the correct x and y values for the buttons
+			;call drawRectangle,6,95,85,11,14,0
+			;95 van links naar rechts x
+			;79 van boven naar onder  y 
+			;130 breedte
+			;11 hooghte
+			;14 gele kleur
+			;0 niet filled
+
 
 		@@pauseLoop:
 			call keysMenuNavigation
