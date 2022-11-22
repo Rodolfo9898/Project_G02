@@ -196,7 +196,7 @@ CODESEG
 			jmp @@noKey
 
 		@@changeDifficulty:
-			sub ecx,02h ;get the actual value from the keyu you presed
+			sub ecx,02h ;get the actual value from the key you pressed
 			mov [fieldType],cl
 			mov [currentMenu],5
 			jmp @@delay
@@ -215,36 +215,36 @@ CODESEG
     endp numbersInput
 
 ;handle number input in game
-;	proc numberInputGame
-;		ARG @@keyInput:byte
-;        USES eax,ecx
-;
-;			movzx ecx,[@@keyInput]
-;			cmp cl,[validEntry] ;last valid number key in scancodes this is number 0
-;			jle @@number
-;			jmp @@noKey
-;
-;		@@number:
-;			cmp ecx,02h; first number input in scacode this is number 1
-;			jge @@interaction
-;			jmp @@noKey
-;
-;		@@interaction:
-;			mov al, [__keyb_keyboardState + ecx] ; number pressed down
-;          	cmp al, 1	; if 1 = key pressed
-;			je @@move
-;			jmp @@noKey
-;		
-;		@@move:
-;			sub ecx,02h ;get the actual value from the keyu you presed
-;			mov [movingSpace],cl
-;			mov [currentMenu],8
-;			call delay
-;		
-;		@@noKey:
-;			ret
-;
-;	endp numberInputGame
+	proc numberInputGame
+		ARG @@keyInput:byte
+        USES eax,ecx
+
+			movzx ecx,[@@keyInput]
+			cmp cl,[validEntry] ;last valid number key in scancodes this is number 0
+			jle @@number
+			jmp @@noKey
+
+		@@number:
+			cmp ecx,02h; first number input in scacode this is number 1
+			jge @@interaction
+			jmp @@noKey
+
+		@@interaction:
+			mov al, [__keyb_keyboardState + ecx] ; number pressed down
+          	cmp al, 1	; if 1 = key pressed
+			je @@move
+			jmp @@noKey
+		
+		@@move:
+			sub ecx,02h ;get the actual value from the key you presed
+			mov [movingSpace],cl
+			mov [currentMenu],8
+			call delay
+		
+		@@noKey:
+			ret
+
+	endp numberInputGame
 
 ;handle the menuNavigation
     proc keysMenuNavigation
@@ -267,8 +267,10 @@ CODESEG
 			je @@inGame
 			cmp ebx,7
 			je @@pause
-			;cmp ebx,8
-			;je @@move
+			cmp ebx,8
+			je @@move
+			cmp ebx,9
+			je @@endGame
             jmp @@noKey
 
         @@main:
@@ -288,7 +290,7 @@ CODESEG
             je @@statistics
             mov al, [__keyb_keyboardState + 39h] ; spacebar
             cmp al, 1	; if 1 = key pressed
-            je @@difficulty
+			je @@difficulty
             jmp @@noKey
 
         @@rules:
@@ -320,10 +322,9 @@ CODESEG
 		@@inGame:
 			mov [currentMenu],6
 			
-		
-		;@@gameplay:
-			;mov eax,[__keyb_rawScanCode]
-            ;call numbersInput,eax
+		@@gameplay:
+			movzx eax,[__keyb_rawScanCode]
+            call numberInputGame,eax
 
 		@@inGameMenu:
 			mov al, [__keyb_keyboardState + 19h] ;letter p
@@ -344,6 +345,30 @@ CODESEG
             je @@inGame
             jmp @@noKey
 
+		@@move:
+			mov [currentMenu],8
+
+		@@moving:
+			jmp @@noKey
+
+		@@endGame:
+			mov [currentMenu],9
+
+		@@endGameMenu:
+			mov al, [__keyb_keyboardState + 26h] ;letter l
+            cmp al, 1	; if 1 = key pressed
+            je @@main
+			mov al, [__keyb_keyboardState + 20h] ;letter s
+            cmp al, 1	; if 1 = key pressed
+           	je @@statistics
+			mov al, [__keyb_keyboardState + 12h] ;letter e
+            cmp al, 1	; if 1 = key pressed
+           	je @@choise
+			mov al, [__keyb_keyboardState + 01h] ;escape
+            cmp al, 1	; if 1 = key pressed
+           	je @@exit
+            jmp @@noKey
+
         @@exit: 
             mov [currentMenu],1
 
@@ -355,9 +380,9 @@ CODESEG
 DATASEG
 	;;tobe coorected with bugfix
 	; last valid input for the array
-	;	validEntry db 08h ;number 7
+		validEntry db 08h ;number 7
 	; move where
-	;	movingSpace db 0
+		movingSpace db 0
 
 
     ; scancode values				

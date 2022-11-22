@@ -424,7 +424,7 @@ DATASEG
     ;these ohter ennumerations will replace the standard one to make the player aware off what the valid inputs are
 	    enum5by4 db " 0     1    2     3    4",'$'
 	    enum6by5 db " 0   1    2   3   4    5",'$'
-	    enum7by6 db " 0  1   2   3   4  5   6",'$'
+	    enum7by6 db " 1  2   3   4   5  6   7",'$'
 	    enum8by7 db " 0  1  2  3  4   5  6  7",'$'
 	    enum9by7 db "0  1  2  3  4  5  6 7  8",'$'
 	    enum0by7 db "0  1 2  3 4  5  6 7  8 9",'$'

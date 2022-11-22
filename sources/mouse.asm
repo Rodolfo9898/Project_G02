@@ -260,8 +260,6 @@ CODESEG
     endp buttonInteraction
 
 DATASEG
-    ;clicked button
-        buttonClicked db 0
     ;mouse handler
         custom_mouse_handler    dd ?
 

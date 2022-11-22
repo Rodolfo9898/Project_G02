@@ -122,7 +122,7 @@ DATASEG
     ;difficulty
 		difficulty db "Chose size of playfield:",'$'
     ;ennumeration for the cols
-		enumeration db ".0..1...2...3...4..5...6",'$'
+		enumeration db " 0  1   2   3   4  5   6",'$'
 
 ;;;;Interactions
 	;start

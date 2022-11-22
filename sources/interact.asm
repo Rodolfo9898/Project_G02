@@ -32,6 +32,8 @@ CODESEG
 			je @@rules
 			cmp ebx,3
 			je @@stats
+			;cmp ebx,5 
+			;je @@choisePlayer
 			cmp ebx,4
 			je @@difficulty		
 		    jmp @@mainMenuChoise	;if no keystroke is detected remain in this loop
@@ -118,6 +120,8 @@ CODESEG
 			;;;debugging
 			cmp ebx,1
 			je @@exit
+			cmp ebx,8
+			je @@move
 			;cmp al,[validateInput]
 			;jl @@moveWhere
 			;cmp al,'d' ;look if you pressed the 'd' key
@@ -140,12 +144,12 @@ CODESEG
 			jmp @@game
 
 		@@restart:
-			movzx ebx,al
+			movzx ebx,[currentMenu]
 			mov[statusGrid],0
 			call clearGrid
-			cmp ebx,'l'
+			cmp ebx,0
 			je @@mainMenu
-			cmp ebx,'s'
+			cmp ebx,3
 			je @@stats
 			jmp @@choisePlayer
 	
@@ -162,16 +166,24 @@ CODESEG
 			jmp @@turnChange
 		
 		@@move:
-			mov ecx,[firstTop]
-			mov [statusGrid+1],0;0 is to reprensent that you did not make an undo 
-			movzx ebx,al
-			sub ebx,'0'
+			;mov ecx,[firstTop]
+			;mov [statusGrid+1],0;0 is to reprensent that you did not make an undo 
+			;movzx ebx,al
+			;sub ebx,'0'
 			;since the values of the keys are inbetween 0-9 and the vals to access the grid are between 0-9
 			;you need to correct ebx to access the correct vals from the grid by subtratcing the hexadecimal value off 1 from ebx.
+			;add ecx,ebx
+			;cmp [field+ecx],0
+			;jne @@game
+			;call makeMove,ebx,edx,0
+			mov ecx,[firstTop]
+			mov [statusGrid+1],0;0 is to reprensent that you did not make an undo
+			movzx ebx,[movingSpace]
 			add ecx,ebx
-			cmp [field+ecx],0
+			cmp [field + ecx],0
 			jne @@game
 			call makeMove,ebx,edx,0
+			mov [currentMenu],6
 		
 		@@turnChange:
 			call gameStatus
@@ -196,18 +208,25 @@ CODESEG
 			je @@noWinner
 
 		@@anounce:
+			mov [currentMenu],9
 			call menuDisplay,7,0,3,0,16,edx
 	
 		@@endGame:
-			mov ah,08h
-		    int 21h
-			cmp al,'e'			;look if you pressed the 'e' key
-			je @@restart
-			cmp al,'l'			;look if you pressed the 'm' key
-			je @@restart
-			cmp al,'s' ;look if you pressed the 's' key
-			je @@restart
-			cmp al,1Bh			;look if you pressed the 'esc' key
+			;mov ah,08h
+		    ;int 21h
+			call keysMenuNavigation
+			movzx ebx,[currentMenu]
+			;cmp ebx,5
+			;cmp al,'e'			;look if you pressed the 'e' key
+			;je @@restart
+			;cmp al,'l'			;look if you pressed the 'm' key
+			;cmp ebx,0
+			;je @@restart
+			;cmp al,'s' ;look if you pressed the 's' key
+			;cmp ebx,3
+			;je @@restart
+			;cmp al,1Bh			;look if you pressed the 'esc' key
+			cmp ebx,1
 			je @@exit
 			jmp @@endGame
 	
