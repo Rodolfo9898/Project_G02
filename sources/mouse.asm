@@ -177,10 +177,11 @@ CODESEG
 
 ;check if a button was clicked
     proc possibleButtonClick
-        ARG @@yValue:byte,@@xValue:byte,@@button:byte
+        ARG @@yValue:byte,@@xValue:byte,@@button:byte,@@smaller:byte
         USES eax,ebx,ecx,edx,edi
             HEIGHT EQU 11
             WIDE EQU 130
+            SWIDE EQU 90
   
             movzx edi,[@@yValue]; waarde van onder naar boven : y
             cmp dx,di
@@ -196,7 +197,16 @@ CODESEG
             cmp cx,di
             jl @@ignore
             
+            movzx eax,[@@smaller]
+            cmp eax,1
+            je @@smallerButton
             mov eax, WIDE; width
+            jmp @@compareWide
+
+        @@smallerButton:
+            mov eax, SWIDE; smaller width
+        
+        @@compareWide:
             add ax,di; original value
             cmp cx, ax 
             jge @@ignore
@@ -216,7 +226,7 @@ CODESEG
         uses eax,ebx,ecx,edx,edi
             movzx edi,[currentMenu]
             cmp edi,0
-            je short @@main
+            je @@main
             cmp edi,2
             je @@static
             cmp edi,3
@@ -224,40 +234,51 @@ CODESEG
             cmp edi,4
             je @@difficulty
             cmp edi,5
-            je @@choise
-            ;;;add interpretation on the main game screen
-            ;cmp edi,6
-            ;je @@inGame
+            je short @@choise
+            cmp edi,6
+            je @@inGame
             cmp edi,7
             je @@paused
+            cmp edi,9
+            je @@announce
+            ;;;add interpreation for the movements
             jmp  @@ignore
 
         @@static:
-            call possibleButtonClick,184,183,0
-            jmp short @@ignore
+            call possibleButtonClick,184,183,0,0
+            jmp @@ignore
 
         @@paused:
-            call possibleButtonClick,119,95,6
+            call possibleButtonClick,119,95,6,0
             jmp  @@ignore
 
         @@inGame:
-            ;call possibleButtonClick
+            call possibleButtonClick,111,6,7,1
+            ;;add the intreperation for undo
             jmp @@ignore
+
         @@difficulty:
             ;;add interpretation for the numbers choises for adapt field
-            call possibleButtonClick,184,183,0
+            call possibleButtonClick,184,183,0,0
             jmp  @@ignore
 
         @@choise:
             ;;add interpretation for the numbers choises for who starts
-            call possibleButtonClick,184,183,4
+            call possibleButtonClick,184,183,4,0
             jmp  @@ignore
 
+        @@announce:
+            call possibleButtonClick,127,6,5,1
+            call possibleButtonClick,143,6,0,1
+            call possibleButtonClick,159,6,3,1
+            call possibleButtonClick,175,6,1,1
+            jmp  @@ignore 
+
         @@main:
-            call possibleButtonClick,79,95,4
-            call possibleButtonClick,95,95,2
-            call possibleButtonClick,111,95,3
-            call possibleButtonClick,127,95,1
+            call possibleButtonClick,79,95,4,0
+            call possibleButtonClick,95,95,2,0
+            call possibleButtonClick,111,95,3,0
+            call possibleButtonClick,127,95,1,0
 
         @@ignore:
             ret 

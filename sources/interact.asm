@@ -102,7 +102,7 @@ CODESEG
 		@@screenGame:
 			call menuDisplay,6,0,2,14,12,edx
 			;used for debbiging to get the correct x and y values for the buttons
-			;call drawRectangle,6,95,85,11,14,0
+			;call drawRectangle,6,127,90,11,14,0 ;undo button posiotn
 			;95 van links naar rechts x
 			;79 van boven naar onder  y 
 			;130 breedte
@@ -142,13 +142,10 @@ CODESEG
 			jmp @@game
 
 		@@restart:
-			;movzx ebx,al
 			mov[statusGrid],0
 			call clearGrid
 			cmp ebx,0
-			;cmp ebx,'l'
 			je @@mainMenu
-			;cmp ebx,'s'
 			cmp ebx,3
 			je @@stats
 			jmp @@choisePlayer
@@ -200,22 +197,17 @@ CODESEG
 		@@anounce:
 			mov [currentMenu],9
 			call menuDisplay,7,0,3,0,16,edx
+			call drawRectangle,6,175,90,11,14,0
 	
 		@@endGame:
-			;mov ah,08h
-		    ;int 21h
-			;cmp al,'e'			;look if you pressed the 'e' key
 			call keysMenuNavigation
 			movzx ebx,[currentMenu]
 			cmp ebx,0
 			je @@restart
-			;cmp al,'l'			;look if you pressed the 'm' key
 			cmp ebx,3
 			je @@restart
-			;cmp al,'s' ;look if you pressed the 's' key
 			cmp ebx,5
 			je @@restart
-			;cmp al,1Bh			;look if you pressed the 'esc' key
 			cmp ebx,1
 			je @@exit
 			jmp @@endGame
