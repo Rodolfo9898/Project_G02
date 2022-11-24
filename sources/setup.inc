@@ -3,7 +3,7 @@ global	setVideoMode:proc,\
         terminateProcess:proc
 
 ;constants
-global field:byte,\
+global field:byte:70,\
        statusGrid: byte,\
        gridValues:byte,\
        rowInBetween:dword,\

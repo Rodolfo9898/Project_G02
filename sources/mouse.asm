@@ -216,7 +216,7 @@ CODESEG
         uses eax,ebx,ecx,edx,edi
             movzx edi,[currentMenu]
             cmp edi,0
-            je @@main
+            je short @@main
             cmp edi,2
             je @@static
             cmp edi,3
@@ -226,19 +226,23 @@ CODESEG
             cmp edi,5
             je @@choise
             ;;;add interpretation on the main game screen
+            ;cmp edi,6
+            ;je @@inGame
             cmp edi,7
             je @@paused
-            jmp @@ignore
+            jmp  @@ignore
 
         @@static:
             call possibleButtonClick,184,183,0
-            jmp  @@ignore
+            jmp short @@ignore
 
         @@paused:
             call possibleButtonClick,119,95,6
             jmp  @@ignore
 
-        
+        @@inGame:
+            ;call possibleButtonClick
+            jmp @@ignore
         @@difficulty:
             ;;add interpretation for the numbers choises for adapt field
             call possibleButtonClick,184,183,0

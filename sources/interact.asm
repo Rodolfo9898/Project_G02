@@ -32,8 +32,6 @@ CODESEG
 			je @@rules
 			cmp ebx,3
 			je @@stats
-			;cmp ebx,5 
-			;je @@choisePlayer
 			cmp ebx,4
 			je @@difficulty		
 		    jmp @@mainMenuChoise	;if no keystroke is detected remain in this loop
@@ -80,7 +78,7 @@ CODESEG
 		@@choisePlayer:
 			call menuDisplay,3,5,1,10,10,0
 			;used for debbiging to get the correct x and y values for the buttons
-			call drawRectangle,95,95,130,11,12,0
+			;call drawRectangle,95,95,130,11,12,0
 			;95 van links naar rechts x
 			;79 van boven naar onder  y 
 			;130 breedte
@@ -118,8 +116,8 @@ CODESEG
 			cmp ebx,7
 			je @@paused
 			;;;debugging
-			cmp ebx,1
-			je @@exit
+			cmp ebx,0
+			je @@mainMenu
 			cmp ebx,8
 			je @@move
 			;cmp al,[validateInput]
@@ -166,16 +164,6 @@ CODESEG
 			jmp @@turnChange
 		
 		@@move:
-			;mov ecx,[firstTop]
-			;mov [statusGrid+1],0;0 is to reprensent that you did not make an undo 
-			;movzx ebx,al
-			;sub ebx,'0'
-			;since the values of the keys are inbetween 0-9 and the vals to access the grid are between 0-9
-			;you need to correct ebx to access the correct vals from the grid by subtratcing the hexadecimal value off 1 from ebx.
-			;add ecx,ebx
-			;cmp [field+ecx],0
-			;jne @@game
-			;call makeMove,ebx,edx,0
 			mov ecx,[firstTop]
 			mov [statusGrid+1],0;0 is to reprensent that you did not make an undo
 			movzx ebx,[movingSpace]
@@ -210,22 +198,24 @@ CODESEG
 		@@anounce:
 			mov [currentMenu],9
 			call menuDisplay,7,0,3,0,16,edx
+			;used for debbiging to get the correct x and y values for the buttons
+			;call drawRectangle,6,128,90,11,14,0
+			;95 van links naar rechts x
+			;79 van boven naar onder  y 
+			;130 breedte
+			;11 hooghte
+			;14 gele kleur
+			;0 niet filled
 	
 		@@endGame:
-			;mov ah,08h
-		    ;int 21h
 			call keysMenuNavigation
 			movzx ebx,[currentMenu]
-			;cmp ebx,5
-			;cmp al,'e'			;look if you pressed the 'e' key
-			;je @@restart
-			;cmp al,'l'			;look if you pressed the 'm' key
-			;cmp ebx,0
-			;je @@restart
-			;cmp al,'s' ;look if you pressed the 's' key
-			;cmp ebx,3
-			;je @@restart
-			;cmp al,1Bh			;look if you pressed the 'esc' key
+			cmp ebx,5
+			je @@restart
+			cmp ebx,0
+			je @@restart
+			cmp ebx,3
+			je @@restart
 			cmp ebx,1
 			je @@exit
 			jmp @@endGame
@@ -239,7 +229,5 @@ CODESEG
 	endp game
 
 DATASEG
-		;indicate the last valid input in chose difficulty level
-		difficultyInput db '8'
 
 END

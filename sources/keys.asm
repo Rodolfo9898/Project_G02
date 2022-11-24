@@ -156,12 +156,12 @@ CODESEG
 			movzx ecx,[@@keyInput]
 			cmp ecx,0bh ;last valid number key in scancodes this is number 0
 			jle @@number
-			jmp @@noKey
+			jmp short @@noKey
 		
 		@@number:
 			cmp ecx,02h; first number input in scacode this is number 1
 			jge @@menus
-			jmp @@noKey
+			jmp short @@noKey
 		
 		@@menus:
 			movzx ebx,[currentMenu]
@@ -330,10 +330,10 @@ CODESEG
 			mov al, [__keyb_keyboardState + 19h] ;letter p
             cmp al, 1	; if 1 = key pressed
             je @@pause
-			;;;;;debugging
+			;;debbugging
 			mov al, [__keyb_keyboardState + 30h] ;letter b
             cmp al, 1	; if 1 = key pressed
-            je @@exit 
+            je @@main
             jmp @@noKey
 
 		@@pause:
@@ -358,7 +358,7 @@ CODESEG
 			mov al, [__keyb_keyboardState + 26h] ;letter l
             cmp al, 1	; if 1 = key pressed
             je @@main
-			mov al, [__keyb_keyboardState + 20h] ;letter s
+			mov al, [__keyb_keyboardState + 1fh] ;letter s
             cmp al, 1	; if 1 = key pressed
            	je @@statistics
 			mov al, [__keyb_keyboardState + 12h] ;letter e

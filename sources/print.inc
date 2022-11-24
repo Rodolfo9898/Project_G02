@@ -3,7 +3,6 @@ global printString:proc,\
        printScore:proc,\
        moveCursor:proc,\
        printChar:proc
-       ;printchar and move cursor used for debbugging
        
 ;constants
 global winnerCount:byte
@@ -28,7 +27,9 @@ global start:byte,\
        pauze:byte,\
        undo:byte,\
        restart:byte,\
-       menu:byte
+       menu:byte,\
+       exitAfterPlay:byte,\
+       statsAfterPlay:byte
 
 ;game announcements  
 global draw:byte,\

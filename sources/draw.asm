@@ -250,6 +250,6 @@ DATASEG
 		pieceDim dd 20
 	;these are the elments used to define a button
 	;the represent the following: how long is each letter in the box,how wide is each letter in the box,height of the box, width off the box
-		buttonSize db 7,8,11,130,85
+		buttonSize db 7,8,11,130,90
 
 END 

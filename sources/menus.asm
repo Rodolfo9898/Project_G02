@@ -8,7 +8,6 @@ include "mouse.inc"
 include "array.inc"
 include "print.inc"
 include "draw.inc"
-include "menus.inc"
 
 CODESEG
 ;according to the menu you want you will load the corresponsding header
@@ -131,16 +130,14 @@ CODESEG
 			mov ebx,[menuAnnounce+eax*4]
 			cmp eax,2
 			je @@newButtons
-			;call makeButton,ebx,edx,ecx,1,1
-			call printString,ebx,edx,ecx,1
+			call makeButton,ebx,edx,ecx,1,1
 			add eax,1
 			add ecx,2
 			jmp @@announceMenu
 
 		@@newButtons:
 			mov ebx,[menuAnnounce+eax*4]
-			;call makeButton,ebx,edx,ecx,1,1
-			call printString,ebx,edx,ecx,38
+			call makeButton,ebx,edx,ecx,1,1
 			cmp eax,edi
 			je @@playerAnnounce
 			add eax,1
@@ -235,7 +232,7 @@ DATASEG
 	;vector game menu
 		menuGame dd offset movement, offset pauze, offset undo	
 	;vector announce menu
-		menuAnnounce dd offset restart, offset menu, offset stats, offset exit
+		menuAnnounce dd offset restart, offset menu, offset statsAfterPlay, offset exitAfterPlay
 	;vector difficulty menu
 		menuDifficulty dd offset veasy, offset easy, offset standard, offset tricky, offset hard, offset extreme, offset square
 

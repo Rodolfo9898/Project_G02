@@ -122,7 +122,7 @@ DATASEG
     ;difficulty
 		difficulty db "Chose size of playfield:",'$'
     ;ennumeration for the cols
-		enumeration db " 0  1   2   3   4  5   6",'$'
+		enumeration db " 1  2   3   4   5  6   7",'$'
 
 ;;;;Interactions
 	;start
@@ -138,7 +138,7 @@ DATASEG
 	;player2
 		player2 db "  Player2 = 2",'$'
 	;move
-		movement db "Move = 0-6",'$'
+		movement db "Move = 1-7",'$'
     ;pauze
 		pauze db "Pause = p",'$'
 	;undo
@@ -146,7 +146,11 @@ DATASEG
 	;restart
 		restart db "Restart = e",'$'
 	;menu
-		menu db "Menu = m",'$'
+		menu db "Menu = l",'$'
+	;exit after an endgame
+		exitAfterPlay db "Exit = esc",'$'
+	;statistics after an endgame
+		statsAfterPlay db "Stats = s",'$'
    
 ;;;;Game announcements   
     ;winner
