@@ -255,6 +255,7 @@ CODESEG
         @@inGame:
             call possibleButtonClick,111,6,7,1
             ;;add the intreperation for undo
+            ;;add interpreation for the movements
             jmp @@ignore
 
         @@difficulty:
