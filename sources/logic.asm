@@ -212,7 +212,7 @@ CODESEG
 		;loop to check all directions for a player
 		@@checker:	
 			mov edx,[winChecker+4*ecx]
-			call checkWinForDirection,[edx],[edx+4],[edx+8],[edx+12],ax,bx
+			call checkWinForDirection,[edx],[edx+4],[edx+8],[edx+12],eax,ebx
 			cmp [statusGrid],bl
 			je @@end
 			cmp ecx,3

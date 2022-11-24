@@ -7,6 +7,7 @@ include "setup.inc"
 include "print.inc"
 include "draw.inc"
 include "array.inc"
+include "keys.inc"
 
 CODESEG
 ;uptade the arrary
@@ -234,7 +235,8 @@ CODESEG
 		USES eax,ebx
 			movzx eax,[@@value]
 			movzx ebx,[validators+eax]
-			mov [validateInput],bl
+			;mov [validateInput],bl
+			mov [validEntry],bl
 			ret
 	endp adaptValidator
 
@@ -452,7 +454,7 @@ DATASEG
     ;these are the possible last elements off the grid (upperRightCorner)
 		corners db 19,29,41,55,62,69,63
     ;indicate what the last valid input in the game is
-		validators db '5','6','7','8','9',':','8'
+		validators db 06h,07h,08h,09h,0ah,0bh,09h;'5','6','7','8','9',':','8'
     ;these will help you adapt the spaces for the given field in vertical
 		v0 db 146,160,170,178,161,146,181
 		v1 db 104,125,140,152,138,125,158

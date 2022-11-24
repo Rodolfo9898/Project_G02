@@ -78,7 +78,7 @@ CODESEG
 		@@choisePlayer:
 			call menuDisplay,3,5,1,10,10,0
 			;used for debbiging to get the correct x and y values for the buttons
-			;call drawRectangle,95,95,130,11,12,0
+			call drawRectangle,95,95,130,11,12,0
 			;95 van links naar rechts x
 			;79 van boven naar onder  y 
 			;130 breedte
@@ -116,8 +116,8 @@ CODESEG
 			cmp ebx,7
 			je @@paused
 			;;;debugging
-			cmp ebx,0
-			je @@mainMenu
+			cmp ebx,1
+			je @@exit
 			cmp ebx,8
 			je @@move
 			;cmp al,[validateInput]
@@ -142,11 +142,13 @@ CODESEG
 			jmp @@game
 
 		@@restart:
-			movzx ebx,[currentMenu]
+			;movzx ebx,al
 			mov[statusGrid],0
 			call clearGrid
 			cmp ebx,0
+			;cmp ebx,'l'
 			je @@mainMenu
+			;cmp ebx,'s'
 			cmp ebx,3
 			je @@stats
 			jmp @@choisePlayer
@@ -165,10 +167,10 @@ CODESEG
 		
 		@@move:
 			mov ecx,[firstTop]
-			mov [statusGrid+1],0;0 is to reprensent that you did not make an undo
+			mov [statusGrid+1],0;0 is to reprensent that you did not make an undo 
 			movzx ebx,[movingSpace]
 			add ecx,ebx
-			cmp [field + ecx],0
+			cmp [field+ecx],0
 			jne @@game
 			call makeMove,ebx,edx,0
 			mov [currentMenu],6
@@ -198,24 +200,22 @@ CODESEG
 		@@anounce:
 			mov [currentMenu],9
 			call menuDisplay,7,0,3,0,16,edx
-			;used for debbiging to get the correct x and y values for the buttons
-			;call drawRectangle,6,128,90,11,14,0
-			;95 van links naar rechts x
-			;79 van boven naar onder  y 
-			;130 breedte
-			;11 hooghte
-			;14 gele kleur
-			;0 niet filled
 	
 		@@endGame:
+			;mov ah,08h
+		    ;int 21h
+			;cmp al,'e'			;look if you pressed the 'e' key
 			call keysMenuNavigation
 			movzx ebx,[currentMenu]
-			cmp ebx,5
-			je @@restart
 			cmp ebx,0
 			je @@restart
+			;cmp al,'l'			;look if you pressed the 'm' key
 			cmp ebx,3
 			je @@restart
+			;cmp al,'s' ;look if you pressed the 's' key
+			cmp ebx,5
+			je @@restart
+			;cmp al,1Bh			;look if you pressed the 'esc' key
 			cmp ebx,1
 			je @@exit
 			jmp @@endGame
@@ -229,5 +229,7 @@ CODESEG
 	endp game
 
 DATASEG
+		;indicate the last valid input in chose difficulty level
+		difficultyInput db '8'
 
 END
