@@ -175,8 +175,8 @@ CODESEG
 	    ret
     endp hideMouse
 
-;check if a button was clicked
-    proc possibleButtonClick
+;check if a normal button was clicked
+    proc possibleNormalInteraction
         ARG @@yValue:byte,@@xValue:byte,@@button:byte,@@smaller:byte
         USES eax,ebx,ecx,edx,edi
             HEIGHT EQU 11
@@ -219,8 +219,53 @@ CODESEG
 
         @@ignore:
             ret 
-    endp possibleButtonClick
-    
+    endp possibleNormalInteraction
+
+;check if a number button was clicked
+    proc possibleNumberInteraction
+        ARG @@yValue:byte,@@xValue:byte,@@button:byte,@@menu:byte,@@input:byte
+        USES eax,ebx,ecx,edx,edi
+            HEIGHT EQU 11
+            WIDE EQU 130
+  
+            movzx edi,[@@yValue]; waarde van onder naar boven : y
+            cmp dx,di
+            jl @@ignore
+            
+            mov eax, HEIGHT; height 
+            add ax,di; original value
+            cmp dx,ax
+            jge @@ignore
+            
+            sar cx, 1 ; the x coordinate is doubled so we divide by 2
+            movzx edi,[@@xValue]; waarde van links naar rechts : x
+            cmp cx,di
+            jl @@ignore
+            
+            mov eax, WIDE; width
+            add ax,di; original value
+            cmp cx, ax 
+            jge @@ignore
+            
+            ;;its inside now react accordingly
+            test bx,1
+            jz @@ignore; we dont use a right click in the menus
+            movzx eax,[@@button]
+            mov [currentMenu],al
+            movzx edi,[@@menu]
+            movzx eax,[@@input]
+            cmp edi,1
+            je @@choise
+            mov [fieldType],al
+            jmp @@ignore
+
+        @@choise:
+            mov [playerColor],al
+
+        @@ignore:
+            ret 
+    endp possibleNumberInteraction
+
 ;mouse routine for the menus
     proc buttonInteraction
         uses eax,ebx,ecx,edx,edi
@@ -234,7 +279,7 @@ CODESEG
             cmp edi,4
             je @@difficulty
             cmp edi,5
-            je short @@choise
+            je @@choise
             cmp edi,6
             je @@inGame
             cmp edi,7
@@ -245,41 +290,50 @@ CODESEG
             jmp  @@ignore
 
         @@static:
-            call possibleButtonClick,184,183,0,0
+            call possibleNormalInteraction,184,183,0,0
             jmp @@ignore
 
         @@paused:
-            call possibleButtonClick,119,95,6,0
+            call possibleNormalInteraction,119,95,6,0
             jmp  @@ignore
 
         @@inGame:
-            call possibleButtonClick,111,6,7,1
+            call possibleNormalInteraction,111,6,7,1
             ;;add the intreperation for undo
             ;;add interpreation for the movements
             jmp @@ignore
 
         @@difficulty:
             ;;add interpretation for the numbers choises for adapt field
-            call possibleButtonClick,184,183,0,0
+            call possibleNumberInteraction,47,95,5,0,0
+            call possibleNumberInteraction,63,95,5,0,1
+            call possibleNumberInteraction,79,95,5,0,2
+            call possibleNumberInteraction,95,95,5,0,3
+            call possibleNumberInteraction,111,95,5,0,4
+            call possibleNumberInteraction,127,95,5,0,5
+            call possibleNumberInteraction,143,95,5,0,6
+            call possibleNormalInteraction,184,183,0,0
             jmp  @@ignore
 
         @@choise:
             ;;add interpretation for the numbers choises for who starts
-            call possibleButtonClick,184,183,4,0
+            call possibleNumberInteraction,79,95,6,1,3
+            call possibleNumberInteraction,111,95,6,1,4
+            call possibleNormalInteraction,184,183,4,0
             jmp  @@ignore
 
         @@announce:
-            call possibleButtonClick,127,6,5,1
-            call possibleButtonClick,143,6,0,1
-            call possibleButtonClick,159,6,3,1
-            call possibleButtonClick,175,6,1,1
+            call possibleNormalInteraction,127,6,5,1
+            call possibleNormalInteraction,143,6,0,1
+            call possibleNormalInteraction,159,6,3,1
+            call possibleNormalInteraction,175,6,1,1
             jmp  @@ignore 
 
         @@main:
-            call possibleButtonClick,79,95,4,0
-            call possibleButtonClick,95,95,2,0
-            call possibleButtonClick,111,95,3,0
-            call possibleButtonClick,127,95,1,0
+            call possibleNormalInteraction,79,95,4,0
+            call possibleNormalInteraction,95,95,2,0
+            call possibleNormalInteraction,111,95,3,0
+            call possibleNormalInteraction,127,95,1,0
 
         @@ignore:
             ret 

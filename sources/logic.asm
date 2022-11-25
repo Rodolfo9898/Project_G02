@@ -8,13 +8,15 @@ include "print.inc"
 include "draw.inc"
 include "array.inc"
 include "logic.inc"
+include "mouse.inc"
 
 CODESEG
 ;make a move on the board+update the array correctly
 	proc makeMove
 		ARG @@col:word,@@plyr:byte,@@undo:byte
 		USES eax,ebx,ecx,edx
-	
+			
+			call hideMouse
 		;prepare to make the correct move
 			movzx eax, [@@col]
 			movzx edx,[@@undo]
@@ -61,6 +63,7 @@ CODESEG
 			je @@undoMove
 
 		@@end:
+			call displayMouse
 			ret
 	endp makeMove
 

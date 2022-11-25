@@ -327,6 +327,7 @@ CODESEG
 			
 		@@gameplay:
 			movzx eax,[__keyb_rawScanCode]
+			;;bug found disco mode activation with numbers 3 and 7
             call numberInputGame,eax
 
 		@@inGameMenu:
@@ -336,7 +337,8 @@ CODESEG
 			;;debbugging
 			mov al, [__keyb_keyboardState + 30h] ;letter b
             cmp al, 1	; if 1 = key pressed
-            je @@main
+            je @@exit
+			;;bug found disco mode activation 
 			mov al, [__keyb_keyboardState + 20h] ;letter d
             cmp al, 1	; if 1 = key pressed
             je @@undo
@@ -411,21 +413,12 @@ CODESEG
     endp keysMenuNavigation
 
 DATASEG
-	;;tobe coorected with bugfix
 	; last valid input for the array
 		validEntry db 08h ;number 7
 	; move where
 		movingSpace db 0
 	; was there a move done
 		moveDone db 0
-
-
-    ; scancode values				
-	    keybscancodes db 29h, 02h, 03h, 04h, 05h, 06h, 07h, 08h, 09h, 0Ah, 0Bh, 0Ch, 0Dh, 0Eh, 	52h, 47h, 49h, 	45h, 35h, 00h, 4Ah
-					  db 0Fh, 10h, 11h, 12h, 13h, 14h, 15h, 16h, 17h, 18h, 19h, 1Ah, 1Bh, 		53h, 4Fh, 51h, 	47h, 48h, 49h, 		1Ch, 4Eh
-					  db 3Ah, 1Eh, 1Fh, 20h, 21h, 22h, 23h, 24h, 25h, 26h, 27h, 28h, 2Bh,    						4Bh, 4Ch, 4Dh
-					  db 2Ah, 00h, 2Ch, 2Dh, 2Eh, 2Fh, 30h, 31h, 32h, 33h, 34h, 35h, 36h,  			 48h, 		4Fh, 50h, 51h,  1Ch
-					  db 1Dh, 0h, 38h,  				39h,  				0h, 0h, 0h, 1Dh,  		4Bh, 50h, 4Dh,  52h, 53h
     ;originalkeyboard    
         originalKeyboardHandlerS	dw ?			; SELECTOR of original keyboard handler
         originalKeyboardHandlerO	dd ?			; OFFSET of original keyboard handler

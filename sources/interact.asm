@@ -51,16 +51,7 @@ CODESEG
 			jmp @@staticMenuLoop ;if no keystroke is detected remain in this loop
 		
 		@@difficulty:
-			call menuDisplay,5,2,6,8,6,0
-			;used for debbiging to get the correct x and y values for the buttons
-			call drawRectangle,95,95,130,11,14,0
-			;95 van links naar rechts x
-			;79 van boven naar onder  y 
-			;130 breedte
-			;11 hooghte
-			;14 gele kleur
-			;0 niet filled
-			
+			call menuDisplay,5,2,6,8,6,0		
 	
 		@@difficltyLoop:
 			call keysMenuNavigation
@@ -77,15 +68,7 @@ CODESEG
 
 		@@choisePlayer:
 			call menuDisplay,3,5,1,10,10,0
-			;used for debbiging to get the correct x and y values for the buttons
-			call drawRectangle,95,95,130,11,12,0
-			;95 van links naar rechts x
-			;79 van boven naar onder  y 
-			;130 breedte
-			;11 hooghte
-			;14 gele kleur
-			;0 niet filled
-		
+	
 		@@choiseLoop:
 			call keysMenuNavigation
 			movzx ebx,[currentMenu]
@@ -115,7 +98,6 @@ CODESEG
 			movzx ebx,[currentMenu]
 			cmp ebx,7
 			je @@paused
-			;;;debugging
 			cmp ebx,1
 			je @@exit
 			cmp ebx,8
