@@ -239,6 +239,7 @@ CODESEG
 			sub ecx,02h ;get the actual value from the key you presed
 			mov [movingSpace],cl
 			mov [currentMenu],8
+			mov [moveDone],1
 			call delay
 		
 		@@noKey:
@@ -271,6 +272,8 @@ CODESEG
 			je @@move
 			cmp ebx,9
 			je @@endGame
+			cmp ebx,10
+			je @@undo
             jmp @@noKey
 
         @@main:
@@ -334,6 +337,9 @@ CODESEG
 			mov al, [__keyb_keyboardState + 30h] ;letter b
             cmp al, 1	; if 1 = key pressed
             je @@main
+			mov al, [__keyb_keyboardState + 20h] ;letter d
+            cmp al, 1	; if 1 = key pressed
+            je @@undo
             jmp @@noKey
 
 		@@pause:
@@ -349,6 +355,16 @@ CODESEG
 			mov [currentMenu],8
 
 		@@moving:
+			cmp[statusGrid],0
+			jg @@endGame 
+			cmp [moveDone],1
+			je @@moveMade
+			jmp @@noKey
+
+		@@moveMade:
+			mov [currentMenu],6
+			mov [moveDone],0
+			call delay
 			jmp @@noKey
 
 		@@endGame:
@@ -368,6 +384,23 @@ CODESEG
             cmp al, 1	; if 1 = key pressed
            	je @@exit
             jmp @@noKey
+		
+		@@undo:
+			mov[currentMenu],10
+		
+		@@undoning:
+			mov [moveDone],1
+			cmp [statusGrid+1],1
+			je @@undone
+			jmp @@noKey
+		
+		@@undone:
+			mov[statusGrid+1],1
+			mov [currentMenu],6
+			call delay
+			call delay
+			mov [moveDone],0
+			jmp @@noKey
 
         @@exit: 
             mov [currentMenu],1
@@ -383,6 +416,8 @@ DATASEG
 		validEntry db 08h ;number 7
 	; move where
 		movingSpace db 0
+	; was there a move done
+		moveDone db 0
 
 
     ; scancode values				

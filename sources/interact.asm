@@ -120,6 +120,10 @@ CODESEG
 			je @@exit
 			cmp ebx,8
 			je @@move
+			cmp ebx,9
+			je @@turnChange
+			cmp ebx,10
+			je @@undo
 			;cmp al,[validateInput]
 			;jl @@moveWhere
 			;cmp al,'d' ;look if you pressed the 'd' key
@@ -158,6 +162,7 @@ CODESEG
 		@@undo:;statusGrid is where you hold the state if the previous move has been undone or not
 			cmp[statusGrid+1],1;1 is to reprensent that you did make an undo
 			je @@game
+			movzx ebx,[movingSpace]
 			call makeMove,ebx,0,1
 			mov[statusGrid+1],1
 			jmp @@turnChange
@@ -170,8 +175,7 @@ CODESEG
 			cmp [field+ecx],0
 			jne @@game
 			call makeMove,ebx,edx,0
-			mov [currentMenu],6
-		
+					
 		@@turnChange:
 			call gameStatus
 			cmp [statusGrid],0
@@ -195,7 +199,6 @@ CODESEG
 			je @@noWinner
 
 		@@anounce:
-			mov [currentMenu],9
 			call menuDisplay,7,0,3,0,16,edx
 			call drawRectangle,6,175,90,11,14,0
 	
