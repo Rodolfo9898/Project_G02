@@ -237,6 +237,55 @@ CODESEG
 			ret
 	endp announceInfo
 
+;draw a sprite
+	proc drawSprite
+		uses eax, edx, ecx, ebx, edi
+		ARG 	@@x:dword, @@y:dword, @@sprite:dword, @@w:dword, @@h:dword
+
+			mov edi, VMEMADR	; Start addres
+
+		; Calculate current pixel by
+		; multiplying Y with screenwidth
+		; and adding X 
+			mov eax, [@@y]
+			mov edx, SCRWIDTH
+			mul edx
+			add	eax, [@@x]	
+			add edi, eax
+
+			mov ebx, [@@sprite]
+			mov ecx, [@@h]	; amount of Y pixels in sprite
+
+		@@spriteline: 
+			push ecx
+			mov ecx, [@@w]	; amount of X pixels in sprite
+
+		@@spritepixel:
+			mov al, [ebx]
+			stosb
+			inc ebx
+			loop @@spritepixel
+		
+			pop ecx
+			add edi, SCRWIDTH
+			sub edi, [@@w]
+			loop @@spriteline
+			
+			ret
+	endp drawSprite
+
+;draw sprite block
+	proc drawer
+		arg @@xValue:dword, @@yValue:dword
+		uses eax,ebx
+
+		mov eax, [@@xValue] ; in pixels
+		mov ebx, [@@yValue] ;in pixels
+		call drawSprite,eax,ebx,offset brick,20,12
+		ret
+
+	endp drawer 
+
 DATASEG
 ;;Constants
 	;these are the constants used for the graphics of the grid
@@ -252,4 +301,18 @@ DATASEG
 	;the represent the following: how long is each letter in the box,how wide is each letter in the box,height of the box, width off the box
 		buttonSize db 7,8,11,130,90
 
+;;Spites
+	;player 1
+		brick 	db 	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
+				db 	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
+				db	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
+				db	07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h
+				db	06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h
+				db	06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h
+				db	06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h
+				db	07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h
+				db	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
+				db	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
+				db	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
+				db	00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h
 END 

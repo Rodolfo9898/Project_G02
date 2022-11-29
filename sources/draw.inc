@@ -9,7 +9,8 @@ global printChar:proc,\
        makeButton:proc,\
        playerTurn:proc,\
        changeTurn:proc,\
-       announceInfo:proc
+       announceInfo:proc,\
+       drawer:proc
 
 ;constants
 global grid:dword,\
