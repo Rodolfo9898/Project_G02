@@ -256,20 +256,21 @@ CODESEG
 			mov ebx, [@@sprite]
 			mov ecx, [@@h]	; amount of Y pixels in sprite
 
-		@@spriteline: 
+		@@scanLineDraw: 
 			push ecx
 			mov ecx, [@@w]	; amount of X pixels in sprite
 
-		@@spritepixel:
+
+		@@spritePixelDrawer:
 			mov al, [ebx]
 			stosb
 			inc ebx
-			loop @@spritepixel
+			loop @@spritePixelDrawer
 		
 			pop ecx
 			add edi, SCRWIDTH
 			sub edi, [@@w]
-			loop @@spriteline
+			loop @@scanLineDraw
 			
 			ret
 	endp drawSprite
@@ -281,7 +282,7 @@ CODESEG
 
 		mov eax, [@@xValue] ; in pixels
 		mov ebx, [@@yValue] ;in pixels
-		call drawSprite,eax,ebx,offset brick,20,12
+		call drawSprite,eax,ebx,offset brick,20,2
 		ret
 
 	endp drawer 
@@ -303,7 +304,8 @@ DATASEG
 
 ;;Spites
 	;player 1
-		brick 	db 	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
+		brick 	db	00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h
+				db 	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
 				db 	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
 				db	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
 				db	07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h

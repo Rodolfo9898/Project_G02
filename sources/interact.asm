@@ -22,7 +22,7 @@ CODESEG
 
 		@@mainMenu:
 			call menuDisplay,0,5,3,15,10,0
-			call drawer,15,15
+			
 
 		@@mainMenuChoise:
 			call keysMenuNavigation
@@ -85,6 +85,7 @@ CODESEG
 	
 		@@screenGame:
 			call menuDisplay,6,0,2,14,12,edx
+			call drawer,20,45
 			;used for debbiging to get the correct x and y values for the buttons
 			;call drawRectangle,6,127,90,11,14,0 ;undo button posiotn
 			;95 van links naar rechts x
