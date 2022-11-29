@@ -22,6 +22,7 @@ CODESEG
 
 		@@mainMenu:
 			call menuDisplay,0,5,3,15,10,0
+			call drawer,15,15
 
 		@@mainMenuChoise:
 			call keysMenuNavigation
