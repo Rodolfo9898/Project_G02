@@ -282,7 +282,7 @@ CODESEG
 
 		mov eax, [@@xValue] ; in pixels
 		mov ebx, [@@yValue] ;in pixels
-		call drawSprite,eax,ebx,offset brick,20,2
+		call drawSprite,eax,ebx,offset brick,20,1
 		ret
 
 	endp drawer 
@@ -304,7 +304,7 @@ DATASEG
 
 ;;Spites
 	;player 1
-		brick 	db	00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h
+		brick 	db	01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h
 				db 	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
 				db 	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
 				db	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
@@ -316,5 +316,5 @@ DATASEG
 				db	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
 				db	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
 				db	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
-				db	00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h,00h
+				db	01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h
 END 
