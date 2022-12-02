@@ -89,7 +89,7 @@ CODESEG
 			mov edi,[grid+3*4];grid+12 is the grid width
 	
     	@@horizontal:;loop to draw all horizontal lines of the grid 
-        	call drawRectangle,eax,ebx,edi,edx,1,1
+        	call drawRectangle,eax,ebx,edi,edx,2,1
 			cmp ecx,0
 			je @@vertical
 			sub ecx,1
@@ -103,7 +103,7 @@ CODESEG
 			jmp @@loop_v
 	
 		@@loop_v:;loop to draw all vertical lines of the grid
-			call drawRectangle,eax,ebx,edx,edi,1,1		
+			call drawRectangle,eax,ebx,edx,edi,2,1		
 			cmp ecx,0
 			je @@end
 			sub ecx,1
@@ -283,7 +283,7 @@ CODESEG
 
 		mov eax, [@@xValue] ; in pixels
 		mov ebx, [@@yValue] ;in pixels
-		;call drawSprite,eax,ebx,offset cell94x70,47,69
+		call drawSprite,eax,ebx,offset testfield,44,47
 		ret
 
 	endp drawer 

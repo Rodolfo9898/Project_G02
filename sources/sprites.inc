@@ -1,1 +1,2 @@
-global cell94x70:byte
+global cell94x70:byte,\
+       testfield:byte
