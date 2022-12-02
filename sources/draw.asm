@@ -6,6 +6,7 @@ ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 include "setup.inc"
 include "print.inc"
 include "draw.inc"
+include "sprites.inc"
 
 ;;;;global constants
 VMEMADR EQU 0A0000h	; video memory address
@@ -282,7 +283,7 @@ CODESEG
 
 		mov eax, [@@xValue] ; in pixels
 		mov ebx, [@@yValue] ;in pixels
-		call drawSprite,eax,ebx,offset brick,20,1
+		;call drawSprite,eax,ebx,offset cell94x70,47,69
 		ret
 
 	endp drawer 
@@ -300,21 +301,6 @@ DATASEG
 		pieceDim dd 20
 	;these are the elments used to define a button
 	;the represent the following: how long is each letter in the box,how wide is each letter in the box,height of the box, width off the box
-		buttonSize db 7,8,11,130,90
+		buttonSize         db 7,8,11,130,90
 
-;;Spites
-	;player 1
-		brick 	db	01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h
-				db 	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
-				db 	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
-				db	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
-				db	07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h
-				db	06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h
-				db	06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h
-				db	06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h
-				db	07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h,07h
-				db	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
-				db	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
-				db	06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h,07h,06h,06h,06h,06h,06h,06h
-				db	01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h,01h
-END 
+END
