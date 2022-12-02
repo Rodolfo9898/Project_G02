@@ -238,10 +238,10 @@ CODESEG
 			ret
 	endp announceInfo
 
-;draw a sprite
+;draw a sprite onto the screen
 	proc drawSprite
 		uses eax, edx, ecx, ebx, edi
-		ARG 	@@x:dword, @@y:dword, @@sprite:dword, @@w:dword, @@h:dword
+		ARG 	@@x:dword, @@y:dword, @@sprite:dword, @@w:dword, @@h:dword,@@indication:dword
 
 			mov edi, VMEMADR	; Start addres
 
@@ -264,6 +264,30 @@ CODESEG
 
 		@@spritePixelDrawer:
 			mov al, [ebx]
+			cmp al,00h ;black
+			je @@fill_in
+			jmp @@contour
+
+		@@fill_in:
+			push eax
+			mov eax,[@@indication]
+			cmp eax,0
+			je @@background
+			cmp eax,1
+			je @@player1
+			pop eax
+			add ax,[colors+8]
+			jmp @@contour
+
+		@@player1:
+			pop eax
+			add ax,[colors+6]
+			jmp @@contour
+
+		@@background:
+			pop eax
+
+		@@contour:
 			stosb
 			inc ebx
 			loop @@spritePixelDrawer
@@ -276,14 +300,15 @@ CODESEG
 			ret
 	endp drawSprite
 
-;draw sprite block
+;;NEEDS TO GO AND replace by DRAW DISTRIBUTOR
+;helper function to draw a sprite
 	proc drawer
 		arg @@xValue:dword, @@yValue:dword
 		uses eax,ebx
 
 		mov eax, [@@xValue] ; in pixels
 		mov ebx, [@@yValue] ;in pixels
-		call drawSprite,eax,ebx,offset testfield,44,47
+		call drawSprite,eax,ebx,offset fieldM,32,32,0
 		ret
 
 	endp drawer 
@@ -303,4 +328,18 @@ DATASEG
 	;the represent the following: how long is each letter in the box,how wide is each letter in the box,height of the box, width off the box
 		buttonSize         db 7,8,11,130,90
 
+	;grid 5*4   ;NEED TO REVIEW SIZE
+	;parameters 44,47
+	; vertical 	10,57,104,151
+	; horizontal 100,144,188,232,276
+
+	;grid 6*5
+	;parameters 37,37
+	; vertical 	10,47,84,121,158
+	; horizontal 100,135,172,209,246,283
+
+	;grid 7*6
+	;parameters 
+	; vertical 	10,42,74,106,138,170
+	; horizontal 100,132,163,194,225,257,288
 END
