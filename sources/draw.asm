@@ -308,7 +308,7 @@ CODESEG
 
 		mov eax, [@@xValue] ; in pixels
 		mov ebx, [@@yValue] ;in pixels
-		call drawSprite,eax,ebx,offset fieldM,32,32,0
+		call drawSprite,eax,ebx,offset fieldXS,42,42,0
 		ret
 
 	endp drawer 
@@ -329,17 +329,29 @@ DATASEG
 		buttonSize         db 7,8,11,130,90
 
 	;grid 5*4   ;NEED TO REVIEW SIZE
-	;parameters 44,47
-	; vertical 	10,57,104,151
-	; horizontal 100,144,188,232,276
+	;parameters 42,42
+	;vertical 	10,54,98,142 ;REVISE
+	;horizontal 100,144,188,232,276;REVISE
 
 	;grid 6*5
 	;parameters 37,37
-	; vertical 	10,47,84,121,158
-	; horizontal 100,135,172,209,246,283
+	;vertical 	10,47,84,121,158
+	;horizontal 100,135,172,209,246,283
 
 	;grid 7*6
-	;parameters 
-	; vertical 	10,42,74,106,138,170
-	; horizontal 100,132,163,194,225,257,288
+	;parameters 32,32
+	;vertical 	10,42,74,106,138,170
+	;horizontal 100,132,163,194,225,257,288
+
+	;grid 8*7
+	;parameters 27,27
+	;vertical 	10,37,64,91,118,145,172
+	;horizontal 100,127,154,181,208,235,262,289
+
+	;grid 9*7
+	;parameters
+	;vertical 	10,
+	;horizontal 100,
+
+
 END

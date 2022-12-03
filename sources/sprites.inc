@@ -1,3 +1,4 @@
 global  fieldXS:byte,\
         fieldS:byte,\
-        fieldM:byte;,\
+        fieldM:byte,\
+        fieldL:byte;,\
