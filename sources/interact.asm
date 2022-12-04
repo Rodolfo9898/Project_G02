@@ -85,16 +85,7 @@ CODESEG
 	
 		@@screenGame:
 			call menuDisplay,6,0,2,14,12,edx
-			;call drawRectangle,100,10,220,180,1,0
-			call drawer,100,10
-			;call drawer,127,37
-			;call drawer,154,64
-			;call drawer,181,91
-			;call drawer,208,118
-			;call drawer,235,145
-			;call drawer,262,172
-			;call drawer,289,10
-			
+			;call drawRectangle,100,10,220,180,1,0			
 			;used for debbiging to get the correct x and y values for the buttons
 			;call drawRectangle,6,127,90,11,14,0 ;undo button posiotn
 			;95 van links naar rechts x

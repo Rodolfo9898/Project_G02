@@ -80,35 +80,30 @@ CODESEG
 ;draw grid
 	proc drawGrid
 		ARG 	@@x0:word, @@y0:word
-		USES 	eax,ebx,ecx,edx,edi
+		USES 	eax,ebx,ecx,edx
 
 			movzx eax,[@@x0] ;x-coordinate begin
 			movzx ebx,[@@y0] ;y-coordinate begin
-			movzx ecx,[gridValues];this are the columns
-			mov edx,[grid];grid is the tickness of the grid
-			mov edi,[grid+3*4];grid+12 is the grid width
-	
+			movzx ecx,[gridValues+1];this are the rows
+			movzx edx,[gridValues] ;this are the columns
+
     	@@horizontal:;loop to draw all horizontal lines of the grid 
-        	call drawRectangle,eax,ebx,edi,edx,2,1
-			cmp ecx,0
-			je @@vertical
+			call drawSprite,eax,ebx,offset fieldXL,22,22,0
+			cmp ecx,1
+			je @@next
 			sub ecx,1
-			add ebx,[grid+1*4];this is the space between a row or column in pixels
+			;add ebx,[grid+1*4]
+			add eax,22 ; add the width of the image in pixels
 			jmp @@horizontal
 
-    	@@vertical:;prepare to loop for the vertical lines
-			movzx ecx,[gridValues+1];this are the rows
-			movzx ebx,[@@y0]
-			mov edi,[grid+2*4];grid+8 is the grid height
-			jmp @@loop_v
-	
-		@@loop_v:;loop to draw all vertical lines of the grid
-			call drawRectangle,eax,ebx,edx,edi,2,1		
-			cmp ecx,0
+    	@@next: ;adjuts the next line
+			sub edx,1
+			cmp edx,0
 			je @@end
-			sub ecx,1
-			add eax,[grid+1*4];this is the space between a row or column in pixels
-			jmp @@loop_v
+			movzx ecx,[gridValues+1];this are the rows
+			movzx eax,[@@x0] ;reset the x-coordinate
+			add ebx,22 ; add the height of the image in pixels
+			jmp @@horizontal
 
     	@@end:
         	ret
@@ -130,6 +125,7 @@ CODESEG
 			movzx ecx,[@@plyr]
 			mov edx,1
 			call drawRectangle,eax,ebx,[pieceDim],[pieceDim],ecx,edx
+			;call drawSprite,eax,ebx,offset fieldXL,22,22,0
 			ret
 	endp drawMove
 
@@ -240,8 +236,8 @@ CODESEG
 
 ;draw a sprite onto the screen
 	proc drawSprite
-		uses eax, edx, ecx, ebx, edi
 		ARG 	@@x:dword, @@y:dword, @@sprite:dword, @@w:dword, @@h:dword,@@indication:dword
+		USES eax, edx, ecx, ebx, edi
 
 			mov edi, VMEMADR	; Start addres
 
@@ -308,7 +304,7 @@ CODESEG
 
 		mov eax, [@@xValue] ; in pixels
 		mov ebx, [@@yValue] ;in pixels
-		call drawSprite,eax,ebx,offset fieldXS,42,42,0
+		call drawSprite,eax,ebx,offset fieldXL,22,22,0
 		ret
 
 	endp drawer 
@@ -328,10 +324,10 @@ DATASEG
 	;the represent the following: how long is each letter in the box,how wide is each letter in the box,height of the box, width off the box
 		buttonSize         db 7,8,11,130,90
 
-	;grid 5*4   ;NEED TO REVIEW SIZE
+	;grid 5*4 
 	;parameters 42,42
-	;vertical 	10,54,98,142 ;REVISE
-	;horizontal 100,144,188,232,276;REVISE
+	;vertical 	10,52,94,136 
+	;horizontal 100,142,184,226,268
 
 	;grid 6*5
 	;parameters 37,37
@@ -349,9 +345,19 @@ DATASEG
 	;horizontal 100,127,154,181,208,235,262,289
 
 	;grid 9*7
-	;parameters
-	;vertical 	10,
-	;horizontal 100,
+	;parameters 22,22
+	;vertical 	10,32,54,76,98,120,142
+	;horizontal 100,122,144,166,188,210,232,254,276
+
+	;grid 10*7
+	;parameters 22,22
+	;vertical 	10,32,54,76,98,120,142
+	;horizontal 100,122,144,166,188,210,232,254,276,298
+
+	;grid 8*8
+	;parameters 22,22
+	;vertical 	10,32,54,76,98,120,142,164
+	;horizontal 100,122,144,166,188,210,232,254
 
 
 END
