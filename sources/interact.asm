@@ -85,7 +85,9 @@ CODESEG
 	
 		@@screenGame:
 			call menuDisplay,6,0,3,14,12,edx
-			call drawRectangle,100,10,220,180,3,0			
+			call drawRectangle,100,10,210,168,6,0
+			
+						
 			;used for debbiging to get the correct x and y values for the buttons
 			;call drawRectangle,6,127,90,11,14,0 ;undo button posiotn
 			;95 van links naar rechts x
@@ -94,6 +96,16 @@ CODESEG
 			;11 hooghte
 			;14 gele kleur
 			;0 niet filled
+			;;;;rows from left to right
+			;;grid 5*4  call drawRectangle,100,10,210,168,6,0
+			;	call drawRectangle,100,10,41,168,8,0
+			;	call drawRectangle,142,10,41,168,2,0
+			;;grid 6*5  call drawRectangle,100,10,218,181,6,0
+			;;grid 7*6	call drawRectangle,100,10,218,187,6,0
+			;;grid 8*7	call drawRectangle,100,10,218,190,6,0
+			;;grid 9*7	call drawRectangle,100,10,199,155,6,0
+			;;grid 10*7	call drawRectangle,100,10,220,155,6,0
+			;;grid 8*8 	call drawRectangle,100,10,177,177,6,0
 
 		@@game:
 			call keysMenuNavigation
