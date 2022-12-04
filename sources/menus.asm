@@ -150,10 +150,11 @@ CODESEG
 			mov ebx,[turnPiece+1*4];ypos
 			mov ecx,[turnPiece+2*4];piece dimention
 			call drawRectangle,eax,ebx,ecx,ecx,edi,1 ;to indicate the winner
-			call restoreField
+			
 
 		@@grid:
 			call drawGrid,100,10;draw the grid
+			call restoreField
 			jmp @@end
 
 		@@back: ;back button is used by stats menu ,rules menu and choice menu hence it is a separate option

@@ -61,12 +61,8 @@ CODESEG
 			mov edx,[ebx+ecx];the correct vector
 			movzx ax,[edx+edi];the value you need
 		
-		@@ovveride:
-			mov [grid+ecx],eax;overridde in the grid vector the correct value
-			add ecx,4
-			cmp ecx,12
-			jg @@end
-			jmp @@load
+		@@override:
+			mov [grid+ecx],eax;override in the grid vector the correct value
 
 		@@end:
 			ret
@@ -235,7 +231,6 @@ CODESEG
 		USES eax,ebx
 			movzx eax,[@@value]
 			movzx ebx,[validators+eax]
-			;mov [validateInput],bl
 			mov [validEntry],bl
 			ret
 	endp adaptValidator
@@ -434,10 +429,8 @@ DATASEG
 		gridVerticals db 4,5,6,7,7,7,8
 		gridHorizontals db 5,6,7,8,9,10,8
     ;values that can replace the standard ones in grid
-		gridTickness db 10,10,10,12,13,10,10
-		gridSpacing db 42,35,30,26,23,21,23
-		gridHeight db 178,175,180,182,161,147,194
-		gridWidth db 220,220,220,220,220,220,184
+		gridSpacing db 42,37,32,27,22,22,22
+
     ;these values will override the values in rowSeparation
 	;row zero is not present since they all start from 0
 		r1 db 5,6,7,8,9,10,8 ;fisrt row
@@ -454,31 +447,32 @@ DATASEG
     ;these are the possible last elements off the grid (upperRightCorner)
 		corners db 19,29,41,55,62,69,63
     ;indicate what the last valid input in the game is
-		validators db 06h,07h,08h,09h,0ah,0bh,09h;'5','6','7','8','9',':','8'
+		validators db 06h,07h,08h,09h,0ah,0bh,09h
     ;these will help you adapt the spaces for the given field in vertical
-		v0 db 146,160,170,178,161,146,181
-		v1 db 104,125,140,152,138,125,158
-		v2 db 62,90,110,126,115,104,135
-		v3 db 20,55,80,100,92,83,112
-		v4 db 0,20,50,74,69,62,89
-		v5 db 0,0,20,48,46,41,66
-		v6 db 0,0,0,22,23,20,43
-		v7 db 0,0,0,0,0,0,20
+		v0 db 136,158,170,172,142,142,164
+		v1 db 94,121,138,145,120,120,142
+		v2 db 52,84,106,118,98,98,120
+		v3 db 10,47,74,91,76,76,98
+		v4 db 0,10,42,64,54,54,76
+		v5 db 0,0,10,37,32,32,54
+		v6 db 0,0,0,10,10,10,32
+		v7 db 0,0,0,0,0,0,10
     ;these will help you adapt the spaces for the given field in horizontal
-		h0 dd 110,110,110,112,113,110,110
-		h1 dd 152,145,140,138,136,131,133
-		h2 dd 194,180,170,164,159,152,156
-		h3 dd 236,215,200,190,182,173,179
-		h4 dd 278,250,230,216,205,194,202
-		h5 dd 0,285,260,242,228,215,225
-		h6 dd 0,0,290,268,251,236,248
-		h7 dd 0,0,0,294,274,257,271
-		h8 dd 0,0,0,0,297,278,0,0
-		h9 dd 0,0,0,0,0,299,0,0
+		h0 dd 100,100,100,100,100,100,100
+		h1 dd 142,135,132,127,122,122,122
+		h2 dd 184,172,163,154,144,144,144
+		h3 dd 226,209,194,181,166,166,166
+		h4 dd 268,246,225,208,188,188,188
+		h5 dd 0,283,257,235,210,210,210
+		h6 dd 0,0,288,262,232,232,232
+		h7 dd 0,0,0,289,254,254,254
+		h8 dd 0,0,0,0,276,276,0
+		h9 dd 0,0,0,0,0,298,0
 		;vertical  dd 170,140,110,80,50,20 ;original
 		;horizontal dd 110,140,170,200,230,260,290 ;original
-    ;these values can change pieceDim to the corresponding size	
-		pieceDimetions db 32,25,20,14,10,11,13
+    ;these values can change pieceDim to the corresponding size
+		pieceDimetions db 42,37,32,27,22,22,22
+		;32,25,20,14,10,11,13
     ;last starting position horizonal(looking to the hoizontal elements only)
 		startLastHor db 1,2,3,4,5,6,4
 		startLastVert db 4,5,6,7,7,7,8
@@ -501,7 +495,7 @@ DATASEG
     ;vetor for the grid values
 		gridValuesVector dd offset gridVerticals, offset gridHorizontals
 	;vector for draw grid
-		gridDrawVector dd offset gridTickness, offset gridSpacing, offset gridHeight, offset gridWidth
+		gridDrawVector dd offset gridSpacing
 	;vector for the board definition
 		gridBorderVector dd offset corners, offset rowElements, offset tops
 	;vector for the row separations

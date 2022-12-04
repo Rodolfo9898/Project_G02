@@ -88,12 +88,12 @@ CODESEG
 			movzx edx,[gridValues] ;this are the columns
 
     	@@horizontal:;loop to draw all horizontal lines of the grid 
-			call drawSprite,eax,ebx,offset fieldXL,22,22,0
+			call drawSprite,eax,ebx,offset fieldXL,22,22,0     ;;;;add the adjustemnts in array
 			cmp ecx,1
 			je @@next
 			sub ecx,1
 			;add ebx,[grid+1*4]
-			add eax,22 ; add the width of the image in pixels
+			add eax,[grid]; add the width of the image in pixels
 			jmp @@horizontal
 
     	@@next: ;adjuts the next line
@@ -102,7 +102,7 @@ CODESEG
 			je @@end
 			movzx ecx,[gridValues+1];this are the rows
 			movzx eax,[@@x0] ;reset the x-coordinate
-			add ebx,22 ; add the height of the image in pixels
+			add ebx,[grid]; add the height of the image in pixels
 			jmp @@horizontal
 
     	@@end:
@@ -124,8 +124,7 @@ CODESEG
 			mov eax,[horizontal +4*eax];acces the value in the array to the corespnding column
 			movzx ecx,[@@plyr]
 			mov edx,1
-			call drawRectangle,eax,ebx,[pieceDim],[pieceDim],ecx,edx
-			;call drawSprite,eax,ebx,offset fieldXL,22,22,0
+			call drawSprite,eax,ebx,offset fieldXL,[pieceDim],[pieceDim],ecx
 			ret
 	endp drawMove
 
@@ -269,7 +268,7 @@ CODESEG
 			mov eax,[@@indication]
 			cmp eax,0
 			je @@background
-			cmp eax,1
+			cmp eax,14
 			je @@player1
 			pop eax
 			add ax,[colors+8]
@@ -299,7 +298,7 @@ CODESEG
 ;;NEEDS TO GO AND replace by DRAW DISTRIBUTOR
 ;helper function to draw a sprite
 	proc drawer
-		arg @@xValue:dword, @@yValue:dword
+		arg @@xValue:dword, @@yValue:dword,@@distributor:byte
 		uses eax,ebx
 
 		mov eax, [@@xValue] ; in pixels
@@ -314,7 +313,7 @@ DATASEG
 	;these are the constants used for the graphics of the grid
 	;they have been ordered as follows:
 	;tickness of the grid,spacing between each column or row,the height,the width
-		grid dd 10,30,180,220
+		grid dd 30
 	;this are the constants used to place the turn piece onto the gamescreen
 	; they are stores as follow xpos,ypos,dimention
 		turnPiece dd 10,30,50
@@ -324,40 +323,7 @@ DATASEG
 	;the represent the following: how long is each letter in the box,how wide is each letter in the box,height of the box, width off the box
 		buttonSize         db 7,8,11,130,90
 
-	;grid 5*4 
-	;parameters 42,42
-	;vertical 	10,52,94,136 
-	;horizontal 100,142,184,226,268
-
-	;grid 6*5
-	;parameters 37,37
-	;vertical 	10,47,84,121,158
-	;horizontal 100,135,172,209,246,283
-
-	;grid 7*6
-	;parameters 32,32
-	;vertical 	10,42,74,106,138,170
-	;horizontal 100,132,163,194,225,257,288
-
-	;grid 8*7
-	;parameters 27,27
-	;vertical 	10,37,64,91,118,145,172
-	;horizontal 100,127,154,181,208,235,262,289
-
-	;grid 9*7
-	;parameters 22,22
-	;vertical 	10,32,54,76,98,120,142
-	;horizontal 100,122,144,166,188,210,232,254,276
-
-	;grid 10*7
-	;parameters 22,22
-	;vertical 	10,32,54,76,98,120,142
-	;horizontal 100,122,144,166,188,210,232,254,276,298
-
-	;grid 8*8
-	;parameters 22,22
-	;vertical 	10,32,54,76,98,120,142,164
-	;horizontal 100,122,144,166,188,210,232,254
-
-
+;;Vectors
+	;sprites vector
+		sprites 
 END
