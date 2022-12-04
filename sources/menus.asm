@@ -114,11 +114,19 @@ CODESEG
 	
 		@@gameMenu:
 			mov ebx,[menuGame+eax*4];the button you want
+			cmp eax,1
+			jle @@moveIndicationKeys
 			call makeButton,ebx,edx,ecx,1,1
 			cmp eax,edi
 		 	je @@grid
 			add eax,1
 		 	add ecx,2
+			jmp @@gameMenu
+		
+		@@moveIndicationKeys:
+			call printString,ebx,edx,ecx,eax
+			add eax,1
+			add ecx,2
 			jmp @@gameMenu
 
 		@@announce:
@@ -127,7 +135,7 @@ CODESEG
 			xor eax,eax
 
 		@@announceMenu: ;there are 2 aling ments for the buttons hence there proc is split in 2 routines
-			mov ebx,[menuAnnounce+eax*4]
+			mov ebx,[menuAnnounce+eax*4]		
 			cmp eax,2
 			je @@newButtons
 			call makeButton,ebx,edx,ecx,1,1
@@ -231,7 +239,7 @@ DATASEG
 	;vector choice menu
 		menuChoice dd offset player1, offset player2
 	;vector game menu
-		menuGame dd offset movement, offset pauze, offset undo	
+		menuGame dd offset movement, offset moving, offset pauze, offset undo	
 	;vector announce menu
 		menuAnnounce dd offset restart, offset menu, offset statsAfterPlay, offset exitAfterPlay
 	;vector difficulty menu
@@ -265,5 +273,7 @@ DATASEG
 		resume db "   Resume = u",'$'          
 	;back
 		back db "    Back = b",'$'
+	;movement mouse
+		moving db "Or mouse",'$'
 
 END

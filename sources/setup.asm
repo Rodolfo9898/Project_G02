@@ -51,18 +51,16 @@ DATASEG
 		rowInBetween dd 7
 	;the last piece on the board
 		upperRightCorner dd 41
-	;indicate what the last valid input in the game is
-		validateInput db '7'
 	;these values indicate where in the array the next row starts
 		rowSeparation db 0,0,0,0,0,0,0
 	;indicate wher the first top start in the array
 		firstTop dd 35
 	;statusGrid will hold all the states usfull to element of the grid
-	;they are : has some won,did we ask to undo the previous move
+	;they are : has some won,did we ask to undo the previous move,if the field is empty
 	;and to reprensent a winner. we use 0 for no winner yet and you can still make a move,
 	;1 for player1 has won, 2 for player2 has won and 3 to indicate a draw
 	;to indicate if we asked to undo a move we use 0 for false and 1 for true
-		statusGrid db 0,0
+		statusGrid db 0,0,1
 	;these are the positions of the spaces in the grid
 	;vertical for the vertical postion in the grid and horizontal for the horizontal postion
 	;if you combine the first element from vertical + any off the elements from horizontal 

@@ -366,6 +366,7 @@ CODESEG
 		@@moveMade:
 			mov [currentMenu],6
 			mov [moveDone],0
+			mov [__keyb_rawScanCode], 0ch; numberinput outside the hexcode to for numbers ,symbol ")"
 			call delay
 			jmp @@noKey
 
@@ -397,7 +398,7 @@ CODESEG
 			jmp @@noKey
 		
 		@@undone:
-			mov[statusGrid+1],1
+			mov [statusGrid+1],1
 			mov [currentMenu],6
 			call delay
 			call delay

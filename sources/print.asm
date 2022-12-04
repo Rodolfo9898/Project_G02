@@ -138,7 +138,7 @@ DATASEG
 	;player2
 		player2 db "  Player2 = 2",'$'
 	;move
-		movement db "Move = 1-7",'$'
+		movement db " Move = 1-7",'$'
     ;pauze
 		pauze db "Pause = p",'$'
 	;undo

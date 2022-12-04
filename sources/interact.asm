@@ -84,7 +84,7 @@ CODESEG
 			movzx edx,[colors+2*ecx]; the color of the player you want to start
 	
 		@@screenGame:
-			call menuDisplay,6,0,2,14,12,edx
+			call menuDisplay,6,0,3,14,12,edx
 			;call drawRectangle,100,10,220,180,1,0			
 			;used for debbiging to get the correct x and y values for the buttons
 			;call drawRectangle,6,127,90,11,14,0 ;undo button posiotn
@@ -125,7 +125,7 @@ CODESEG
 			jmp @@pauseLoop
 		
 		@@restore:
-			call menuDisplay,6,0,2,14,12,edx
+			call menuDisplay,6,0,3,14,12,edx
 			call restoreField
 			jmp @@game
 
@@ -148,7 +148,7 @@ CODESEG
 			je @@game
 			movzx ebx,[movingSpace]
 			call makeMove,ebx,0,1
-			mov[statusGrid+1],1
+			mov [statusGrid+1],1
 			jmp @@turnChange
 		
 		@@move:
@@ -184,7 +184,14 @@ CODESEG
 
 		@@anounce:
 			call menuDisplay,7,0,3,0,16,edx
-			call drawRectangle,6,175,90,11,14,0
+			;call drawRectangle,6,175,90,11,14,0
+			;used for debbiging to get the correct x and y values for the buttons
+			;95 van links naar rechts x
+			;79 van boven naar onder  y 	
+			;130 breedte
+			;11 hooghte
+			;14 gele kleur
+			;0 niet filled
 	
 		@@endGame:
 			call keysMenuNavigation
@@ -208,7 +215,4 @@ CODESEG
 	endp game
 
 DATASEG
-		;indicate the last valid input in chose difficulty level
-		difficultyInput db '8'
-
 END

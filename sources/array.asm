@@ -411,25 +411,25 @@ DATASEG
 	;the values you need to give in CheckWinForDirection when checking negative slope
 		negCheck dd 6,2,3,6
 	;these are the values that are used to overide the move instuction on the screen
-		game5by4 db "Move = 1-5",'$'
-		game6by5 db "Move = 1-6",'$'
-		game7by6 db "Move = 1-7",'$'
-		game8by7 db "Move = 1-8",'$'
-		game9by7 db "Move = 1-9",'$'
-		game0by7 db "Move = 1-0",'$'
+		game5by4 db " Move = 1-5",'$'
+		game6by5 db " Move = 1-6",'$'
+		game7by6 db " Move = 1-7",'$'
+		game8by7 db " Move = 1-8",'$'
+		game9by7 db " Move = 1-9",'$'
+		game0by7 db " Move = 1-0",'$'
     ;these ohter ennumerations will replace the standard one to make the player aware off what the valid inputs are
-	    enum5by4 db " 1     2    3     4    5",'$'
-	    enum6by5 db " 1   2    3   4   5    6",'$'
+	    enum5by4 db " 1    2    3    4     5",'$'
+	    enum6by5 db "1    2   3    4    5   6",'$'
 	    enum7by6 db " 1  2   3   4   5  6   7",'$'
-	    enum8by7 db " 1  2  3  4  5   6  7  8",'$'
-	    enum9by7 db "1  2  3  4  5  6  7 8  9",'$'
-	    enum0by7 db "1  2 3  4 5  6  7 8  9 0",'$'
-	    enum8by8 db "1  2  3  4  5  6  7  8  ",'$'
+	    enum8by7 db "1  2   3  4  5   6  7  8",'$'
+	    enum9by7 db "1 2  3  4 5  6  7  8 9",'$'
+	    enum0by7 db "1 2  3  4 5  6  7  8 9 0",'$'
+	    enum8by8 db "1  2 3  4  5  6 7  8  ",'$'
     ;values that can replace the standard ones in gridValues
 		gridVerticals db 4,5,6,7,7,7,8
 		gridHorizontals db 5,6,7,8,9,10,8
     ;values that can replace the standard ones in grid
-		gridSpacing db 42,37,32,27,22,22,22
+		gridSpacing db 42,36,31,27,22,22,22
 
     ;these values will override the values in rowSeparation
 	;row zero is not present since they all start from 0
@@ -449,22 +449,22 @@ DATASEG
     ;indicate what the last valid input in the game is
 		validators db 06h,07h,08h,09h,0ah,0bh,09h
     ;these will help you adapt the spaces for the given field in vertical
-		v0 db 136,158,170,172,142,142,164
-		v1 db 94,121,138,145,120,120,142
-		v2 db 52,84,106,118,98,98,120
-		v3 db 10,47,74,91,76,76,98
-		v4 db 0,10,42,64,54,54,76
+		v0 db 136,154,165,172,142,142,164
+		v1 db 94,118,134,145,120,120,142
+		v2 db 52,82,103,118,98,98,120
+		v3 db 10,46,72,91,76,76,98
+		v4 db 0,10,41,64,54,54,76
 		v5 db 0,0,10,37,32,32,54
 		v6 db 0,0,0,10,10,10,32
 		v7 db 0,0,0,0,0,0,10
     ;these will help you adapt the spaces for the given field in horizontal
 		h0 dd 100,100,100,100,100,100,100
-		h1 dd 142,135,132,127,122,122,122
-		h2 dd 184,172,163,154,144,144,144
-		h3 dd 226,209,194,181,166,166,166
-		h4 dd 268,246,225,208,188,188,188
-		h5 dd 0,283,257,235,210,210,210
-		h6 dd 0,0,288,262,232,232,232
+		h1 dd 142,136,131,127,122,122,122
+		h2 dd 184,172,162,154,144,144,144
+		h3 dd 226,208,193,181,166,166,166
+		h4 dd 268,244,224,208,188,188,188
+		h5 dd 0,280,255,235,210,210,210
+		h6 dd 0,0,286,260,232,232,232
 		h7 dd 0,0,0,289,254,254,254
 		h8 dd 0,0,0,0,276,276,0
 		h9 dd 0,0,0,0,0,298,0

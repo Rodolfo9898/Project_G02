@@ -44,6 +44,7 @@ ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
 INCLUDE "mouse.inc"
 include "setup.inc"
+include "logic.inc"
 ;;;;global constants
 VMEMADR EQU 0A0000h	; video memory address
 SCRWIDTH EQU 320	; screen witdth
@@ -286,6 +287,8 @@ CODESEG
             je @@paused
             cmp edi,9
             je @@announce
+            cmp edi,10
+            je @@undo
             ;;;add interpreation for the movements
             jmp  @@ignore
 
@@ -298,8 +301,9 @@ CODESEG
             jmp  @@ignore
 
         @@inGame:
-            call possibleNormalInteraction,111,6,7,1
-            ;;add the intreperation for undo
+            ;call gameStatus
+            call possibleNormalInteraction,127,6,7,1
+            call possibleNormalInteraction,143,6,10,1
             ;;add interpreation for the movements
             jmp @@ignore
 
@@ -327,7 +331,11 @@ CODESEG
             call possibleNormalInteraction,143,6,0,1
             call possibleNormalInteraction,159,6,3,1
             call possibleNormalInteraction,175,6,1,1
-            jmp  @@ignore 
+            jmp  @@ignore
+
+        @@undo:
+            mov [currentMenu],6
+            jmp @@ignore 
 
         @@main:
             call possibleNormalInteraction,79,95,4,0
