@@ -85,7 +85,7 @@ CODESEG
 	
 		@@screenGame:
 			call menuDisplay,6,0,3,14,12,edx
-			;call drawRectangle,100,10,220,180,1,0			
+			call drawRectangle,100,10,220,180,3,0			
 			;used for debbiging to get the correct x and y values for the buttons
 			;call drawRectangle,6,127,90,11,14,0 ;undo button posiotn
 			;95 van links naar rechts x
@@ -108,10 +108,6 @@ CODESEG
 			je @@turnChange
 			cmp ebx,10
 			je @@undo
-			;cmp al,[validateInput]
-			;jl @@moveWhere
-			;cmp al,'d' ;look if you pressed the 'd' key
-			;je short @@undo
 			jmp @@game;if no keystroke is detected remain in this loop
 
 		@@paused:
@@ -137,12 +133,7 @@ CODESEG
 			cmp ebx,3
 			je @@stats
 			jmp @@choisePlayer
-	
-		@@moveWhere:
-			cmp al,'0'
-			jge @@move
-	    	jmp @@game
-			
+				
 		@@undo:;statusGrid is where you hold the state if the previous move has been undone or not
 			cmp[statusGrid+1],1;1 is to reprensent that you did make an undo
 			je @@game
@@ -184,14 +175,6 @@ CODESEG
 
 		@@anounce:
 			call menuDisplay,7,0,3,0,16,edx
-			;call drawRectangle,6,175,90,11,14,0
-			;used for debbiging to get the correct x and y values for the buttons
-			;95 van links naar rechts x
-			;79 van boven naar onder  y 	
-			;130 breedte
-			;11 hooghte
-			;14 gele kleur
-			;0 niet filled
 	
 		@@endGame:
 			call keysMenuNavigation
