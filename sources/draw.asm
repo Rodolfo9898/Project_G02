@@ -87,8 +87,9 @@ CODESEG
 			movzx ecx,[gridValues+1];this are the rows
 			movzx edx,[gridValues] ;this are the columns
 
-    	@@horizontal:;loop to draw all horizontal lines of the grid 
-			call drawSprite,eax,ebx,offset fieldXL,22,22,0     ;;;;add the adjustemnts in array
+    	@@horizontal:;loop to draw all horizontal lines of the grid
+			call drawer,eax,ebx,0
+			;call drawSprite,eax,ebx,offset fieldXL,22,22,0     ;;;;add the adjustemnts in array
 			cmp ecx,1
 			je @@next
 			sub ecx,1
@@ -124,7 +125,7 @@ CODESEG
 			mov eax,[horizontal +4*eax];acces the value in the array to the corespnding column
 			movzx ecx,[@@plyr]
 			mov edx,1
-			call drawSprite,eax,ebx,offset fieldXL,[pieceDim],[pieceDim],ecx
+			call drawer,eax,ebx,ecx
 			ret
 	endp drawMove
 
@@ -295,15 +296,17 @@ CODESEG
 			ret
 	endp drawSprite
 
-;;NEEDS TO GO AND replace by DRAW DISTRIBUTOR
 ;helper function to draw a sprite
 	proc drawer
-		arg @@xValue:dword, @@yValue:dword,@@distributor:byte
-		uses eax,ebx
+		arg @@xValue:dword, @@yValue:dword, @@indication:byte
+		uses eax,ebx,ecx,edx
 
+		movzx eax,[fieldType]
+		mov edx, [sprites+eax*4]; the sprite you need 
+		movzx ecx,[@@indication]
 		mov eax, [@@xValue] ; in pixels
 		mov ebx, [@@yValue] ;in pixels
-		call drawSprite,eax,ebx,offset fieldXL,22,22,0
+		call drawSprite,eax,ebx,edx,[pieceDim],[pieceDim],ecx
 		ret
 
 	endp drawer 
@@ -325,5 +328,5 @@ DATASEG
 
 ;;Vectors
 	;sprites vector
-		sprites 
+		sprites dd offset fieldXS, offset fieldS, offset fieldM, offset fieldL, offset fieldXL, offset fieldXL, offset fieldXL
 END
