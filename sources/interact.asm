@@ -91,8 +91,6 @@ CODESEG
 			movzx ebx,[currentMenu]
 			cmp ebx,7
 			je @@paused
-			cmp ebx,1
-			je @@exit
 			cmp ebx,8
 			je @@move
 			cmp ebx,9

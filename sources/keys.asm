@@ -334,11 +334,6 @@ CODESEG
 			mov al, [__keyb_keyboardState + 19h] ;letter p
             cmp al, 1	; if 1 = key pressed
             je @@pause
-			;;debbugging
-			mov al, [__keyb_keyboardState + 30h] ;letter b
-            cmp al, 1	; if 1 = key pressed
-            je @@exit
-			;;bug found disco mode activation 
 			mov al, [__keyb_keyboardState + 20h] ;letter d
             cmp al, 1	; if 1 = key pressed
             je @@undo
@@ -368,7 +363,7 @@ CODESEG
 			mov [moveDone],0
 			mov [__keyb_rawScanCode], 0ch; numberinput outside the hexcode to for numbers ,symbol ")"
 			call delay
-			jmp @@noKey
+			jmp short @@noKey
 
 		@@endGame:
 			mov [currentMenu],9
