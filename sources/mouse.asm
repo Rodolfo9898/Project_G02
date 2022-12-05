@@ -270,7 +270,7 @@ CODESEG
 
 ;check for a movement inside the board
     proc possibleMoveInteraction
-        ARG @@yValue:byte,@@xValue:byte,@@input:byte
+        ARG @@yValue:word,@@xValue:word,@@input:byte
         USES eax,ebx,ecx,edx,edi
             
             movzx edi,[@@yValue]; waarde van onder naar boven : y
@@ -317,8 +317,8 @@ CODESEG
         USES eax,edi
 
             movzx edi,[@@input]
-            ;mov eax,[horizontal+4*edi]
-            call possibleMoveInteraction,10,100,edi
+            mov eax,[horizontal+4*edi]
+            call possibleMoveInteraction,10,eax,edi
 
         @@ignore:
             ret
@@ -348,7 +348,6 @@ CODESEG
             je @@announce
             cmp edi,10
             je @@undo
-            ;;;add interpreation for the movements
             jmp  @@ignore
 
         @@static:
@@ -362,9 +361,16 @@ CODESEG
         @@inGame:
             call possibleNormalInteraction,127,6,7,1
             call possibleNormalInteraction,143,6,10,1
-            ;;add interpreation for the movements
-            ;call possibleMoveInteraction,10,100,0
             call gameInteraction,0
+            call gameInteraction,1
+            call gameInteraction,2
+            call gameInteraction,3            
+            call gameInteraction,4
+            call gameInteraction,5
+            call gameInteraction,6
+            call gameInteraction,7
+            call gameInteraction,8
+            call gameInteraction,9
             jmp @@ignore
 
         @@difficulty:
