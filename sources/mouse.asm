@@ -44,7 +44,8 @@ ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
 INCLUDE "mouse.inc"
 include "setup.inc"
-include "logic.inc"
+
+
 ;;;;global constants
 VMEMADR EQU 0A0000h	; video memory address
 SCRWIDTH EQU 320	; screen witdth
@@ -267,6 +268,62 @@ CODESEG
             ret 
     endp possibleNumberInteraction
 
+;check for a movement inside the board
+    proc possibleMoveInteraction
+        ARG @@yValue:byte,@@xValue:byte,@@input:byte
+        USES eax,ebx,ecx,edx,edi
+            
+            movzx edi,[@@yValue]; waarde van onder naar boven : y
+            cmp dx,di
+            jl @@ignore
+
+            push edi
+            movzx edi,[fieldType]
+            movzx eax,[columnSpaces+edi];height
+            pop edi
+            add ax,di; original value
+            cmp dx,ax
+            jge @@ignore
+
+            sar cx, 1 ; the x coordinate is doubled so we divide by 2
+            movzx edi,[@@xValue]; waarde van links naar rechts : x
+            cmp cx,di
+            jl @@ignore
+
+            push edi
+            movzx edi,[fieldType]
+            movzx eax,[gridSpacing+edi]; width
+            pop edi
+            add ax,di; original value
+            dec eax
+            cmp cx, ax 
+            jge @@ignore
+
+            ;;its inside now react accordingly
+            test bx,1
+            jz @@ignore; we dont use a right click in the menus
+            movzx eax,[@@input]
+            mov [movingSpace],al
+            mov [currentMenu],8
+            mov [moveDone],1
+        @@ignore:
+            ret
+
+    endp possibleMoveInteraction
+
+;a game interaction
+    proc gameInteraction
+        Arg @@input:byte
+        USES eax,edi
+
+            movzx edi,[@@input]
+            ;mov eax,[horizontal+4*edi]
+            call possibleMoveInteraction,10,100,edi
+
+        @@ignore:
+            ret
+    endp gameInteraction
+
 ;mouse routine for the menus
     proc buttonInteraction
         uses eax,ebx,ecx,edx,edi
@@ -285,6 +342,8 @@ CODESEG
             je @@inGame
             cmp edi,7
             je @@paused
+            cmp edi,8
+            je @@move
             cmp edi,9
             je @@announce
             cmp edi,10
@@ -301,14 +360,14 @@ CODESEG
             jmp  @@ignore
 
         @@inGame:
-            ;call gameStatus
             call possibleNormalInteraction,127,6,7,1
             call possibleNormalInteraction,143,6,10,1
             ;;add interpreation for the movements
+            ;call possibleMoveInteraction,10,100,0
+            call gameInteraction,0
             jmp @@ignore
 
         @@difficulty:
-            ;;add interpretation for the numbers choises for adapt field
             call possibleNumberInteraction,47,95,5,0,0
             call possibleNumberInteraction,63,95,5,0,1
             call possibleNumberInteraction,79,95,5,0,2
@@ -320,7 +379,6 @@ CODESEG
             jmp  @@ignore
 
         @@choise:
-            ;;add interpretation for the numbers choises for who starts
             call possibleNumberInteraction,79,95,6,1,3
             call possibleNumberInteraction,111,95,6,1,4
             call possibleNormalInteraction,184,183,4,0
@@ -335,7 +393,19 @@ CODESEG
 
         @@undo:
             mov [currentMenu],6
-            jmp @@ignore 
+            jmp @@ignore
+        
+        @@move:
+            cmp [statusGrid],0
+            jg @@announce
+            cmp [moveDone],1
+            je @@moveMade
+            jmp @@ignore
+
+        @@moveMade:
+            mov [currentMenu],6
+            mov [moveDone],0
+            jmp @@ignore
 
         @@main:
             call possibleNormalInteraction,79,95,4,0
@@ -350,5 +420,7 @@ CODESEG
 DATASEG
     ;mouse handler
         custom_mouse_handler    dd ?
+    ;columns in pixles
+        columnSpaces db 168,181,187,190,155,155,177 
 
 END

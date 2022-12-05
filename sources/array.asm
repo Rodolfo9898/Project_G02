@@ -428,8 +428,8 @@ DATASEG
     ;values that can replace the standard ones in gridValues
 		gridVerticals db 4,5,6,7,7,7,8
 		gridHorizontals db 5,6,7,8,9,10,8
-    ;values that can replace the standard ones in grid
-		gridSpacing db 42,36,31,27,22,22,22
+   
+	
 
     ;these values will override the values in rowSeparation
 	;row zero is not present since they all start from 0

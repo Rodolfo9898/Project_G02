@@ -416,10 +416,6 @@ CODESEG
 DATASEG
 	; last valid input for the array
 		validEntry db 08h ;number 7
-	; move where
-		movingSpace db 0
-	; was there a move done
-		moveDone db 0
     ;originalkeyboard    
         originalKeyboardHandlerS	dw ?			; SELECTOR of original keyboard handler
         originalKeyboardHandlerO	dd ?			; OFFSET of original keyboard handler

@@ -16,4 +16,7 @@ global field:byte:70,\
        colors:word,\
        currentMenu:byte,\
        fieldType:byte,\
-       playerColor:byte
+       playerColor:byte,\
+       movingSpace:byte,\
+       moveDone:byte,\
+       gridSpacing:byte

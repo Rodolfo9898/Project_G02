@@ -76,5 +76,11 @@ DATASEG
 		fieldType db 0
 	;player you chose to start
 		playerColor db 0
+	; move where
+		movingSpace db 0
+	; was there a move done
+		moveDone db 0
+	;values that can replace the standard ones in grid
+		gridSpacing db 42,36,31,27,22,22,22
 
 END
