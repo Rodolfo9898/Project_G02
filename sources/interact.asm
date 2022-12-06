@@ -24,7 +24,6 @@ CODESEG
 		@@mainMenu:
 			call menuDisplay,0,5,3,15,10,0
 			
-
 		@@mainMenuChoise:
 			call keysMenuNavigation
 			movzx ebx,[currentMenu]
