@@ -180,6 +180,7 @@ CODESEG
 			add eax,1
 			mov ebx,[menuMain+eax*4];the text for the credits
 			call printString,ebx,edx,20,2
+			call drawlogo
 
 		@@end:
 			ret 

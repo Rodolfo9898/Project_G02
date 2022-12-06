@@ -291,8 +291,7 @@ CODESEG
 			pop ecx
 			add edi, SCRWIDTH
 			sub edi, [@@w]
-			loop @@scanLineDraw
-			
+			loop @@scanLineDraw			
 			ret
 	endp drawSprite
 
@@ -309,7 +308,29 @@ CODESEG
 		call drawSprite,eax,ebx,edx,[pieceDim],[pieceDim],ecx
 		ret
 
-	endp drawer 
+	endp drawer
+
+;helper to draw the logo
+	proc drawlogo
+		uses eax,ebx,ecx
+
+		mov eax,15
+		mov ebx,80
+		xor ecx,ecx
+
+	@@draw:
+		cmp ecx,1
+		jg @@done
+		call drawSprite,eax,ebx,offset logo,50,38,0
+		add eax,237
+		add ecx,1
+		jmp @@draw
+	
+	@@done:
+		ret
+		;call drawSprite,252,ebx,offset logo,50,38,0
+
+	endp drawlogo
 	
 
 DATASEG

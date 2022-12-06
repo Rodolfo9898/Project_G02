@@ -12,6 +12,7 @@ include "logic.inc"
 include "print.inc"
 include "interact.inc"
 include "keys.inc"
+include "sprites.inc"
 
 CODESEG
 ;actual game engine

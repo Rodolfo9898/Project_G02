@@ -10,7 +10,7 @@ global printChar:proc,\
        playerTurn:proc,\
        changeTurn:proc,\
        announceInfo:proc,\
-       drawer:proc
+       drawlogo:proc
 
 ;constants
 global grid:dword,\
