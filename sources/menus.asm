@@ -169,11 +169,18 @@ CODESEG
 			movzx edx,[colors+2*2]
 			mov ebx,offset back ;the back button
 			call makeButton,ebx,edx,23,23,0
-			jmp @@end 
+			jmp @@logo 
 
 		@@resume: ;pause menu options
 			mov ebx,offset resume;the resume button
 			call makeButton,ebx,edx,ecx,12,0
+			jmp @@end
+
+		@@logo:
+			movzx eax,[@@menu]
+			cmp eax,2
+			jne @@end
+			call drawStats
 			jmp @@end
 
 		@@credits: ;credits have a different format that the buttons hence it is a separate option

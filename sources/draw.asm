@@ -328,9 +328,17 @@ CODESEG
 	
 	@@done:
 		ret
-		;call drawSprite,252,ebx,offset logo,50,38,0
 
 	endp drawlogo
+
+;draw the stats image
+	proc drawStats
+		USES eax,ebx
+		mov eax,80
+		mov ebx,40
+		call drawSprite,15,15,offset statIMG,61,56,0
+		ret 
+	endp drawStats
 	
 
 DATASEG
@@ -351,4 +359,7 @@ DATASEG
 ;;Vectors
 	;sprites vector
 		sprites dd offset fieldXS, offset fieldS, offset fieldM, offset fieldL, offset fieldXL, offset fieldXL, offset fieldXL
+
+	;logos vector
+		logos dd offset logo, offset statIMG
 END

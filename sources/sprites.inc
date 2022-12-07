@@ -3,4 +3,5 @@ global  fieldXS:byte,\
         fieldM:byte,\
         fieldL:byte,\
         fieldXL:byte,\
-        logo:byte
+        logo:byte,\
+        statIMG:byte
