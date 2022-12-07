@@ -264,11 +264,12 @@ DATASEG
 				db "mouse.",'~'
 				db "Navigate the menus by pressing the key",'~'
 				db "of the corresponding action you want",'~'
-				db "to perform.",'~'
+				db "to perform or use the mouse to do it.",'~'
 				db '~'
 				db "Note: undo can only be used in between",'~'
 				db "2 moves and the statistics reset after",'~'
-				db "exiting the current execution of the",'~',"app.",'$'
+				db "exiting the current execution of the",'~'
+				db "app.",'$'
 
 ;;;;Special interactions
 	;resume
