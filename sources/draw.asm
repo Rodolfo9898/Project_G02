@@ -321,7 +321,7 @@ CODESEG
 	@@draw:
 		cmp ecx,1
 		jg @@done
-		call drawSprite,eax,ebx,offset logo,50,38,0
+		call drawSprite,eax,ebx,offset logo,50,50,0
 		add eax,237
 		add ecx,1
 		jmp @@draw
@@ -336,9 +336,27 @@ CODESEG
 		USES eax,ebx
 		mov eax,80
 		mov ebx,40
-		call drawSprite,15,15,offset statIMG,61,56,0
+		call drawSprite,15,15,offset statIMG,61,61,0
 		ret 
 	endp drawStats
+
+;draw the choise image
+	proc drawChoise
+		USES eax,ebx
+		mov eax,80
+		mov ebx,40
+		call drawSprite,5,80,offset choiseIMG,61,61,0
+		ret 
+	endp drawChoise
+
+;draw the player image
+	proc drawPlayers
+		USES eax,ebx
+		mov eax,80
+		mov ebx,40
+		call drawSprite,5,80,offset playerIMG,50,50,0
+		ret 
+	endp drawPlayers
 	
 
 DATASEG
@@ -361,5 +379,5 @@ DATASEG
 		sprites dd offset fieldXS, offset fieldS, offset fieldM, offset fieldL, offset fieldXL, offset fieldXL, offset fieldXL
 
 	;logos vector
-		logos dd offset logo, offset statIMG
+		logos dd offset logo, offset statIMG, offset choiseIMG, offset playersIMG
 END

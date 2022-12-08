@@ -11,7 +11,9 @@ global printChar:proc,\
        changeTurn:proc,\
        announceInfo:proc,\
        drawlogo:proc,\
-       drawStats:proc
+       drawStats:proc,\
+       drawChoise:proc,\
+       drawPlayers:proc
 
 ;constants
 global grid:dword,\

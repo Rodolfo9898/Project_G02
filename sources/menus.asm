@@ -163,7 +163,7 @@ CODESEG
 		@@grid:
 			call drawGrid,100,10;draw the grid
 			call restoreField
-			jmp @@end
+			jmp short @@end
 
 		@@back: ;back button is used by stats menu ,rules menu and choice menu hence it is a separate option
 			movzx edx,[colors+2*2]
@@ -179,7 +179,18 @@ CODESEG
 		@@logo:
 			movzx eax,[@@menu]
 			cmp eax,2
-			jne @@end
+			je @@statsLogo
+			cmp eax,5
+			je @@choiseLogo
+			;call drawPlayers
+			jmp @@end
+
+		@@choiseLogo:
+			call drawChoise
+			jmp @@end
+
+
+		@@statsLogo:
 			call drawStats
 			jmp @@end
 

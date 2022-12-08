@@ -4,4 +4,6 @@ global  fieldXS:byte,\
         fieldL:byte,\
         fieldXL:byte,\
         logo:byte,\
-        statIMG:byte
+        statIMG:byte,\
+        choiseIMG:byte,\
+        playerIMG:byte
