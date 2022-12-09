@@ -8,6 +8,7 @@ include "mouse.inc"
 include "array.inc"
 include "print.inc"
 include "draw.inc"
+include "sprites.inc"
 
 CODESEG
 ;according to the menu you want you will load the corresponsding header
@@ -157,13 +158,12 @@ CODESEG
 			mov eax,[turnPiece] ;xpos
 			mov ebx,[turnPiece+1*4];ypos
 			mov ecx,[turnPiece+2*4];piece dimention
-			call drawRectangle,eax,ebx,ecx,ecx,edi,1 ;to indicate the winner
-			
+			call drawSprite,eax,ebx,offset fieldXS,ecx,ecx,edi,1;to indicate the winner
 
 		@@grid:
 			call drawGrid,100,10;draw the grid
 			call restoreField
-			jmp short @@end
+			jmp @@end
 
 		@@back: ;back button is used by stats menu ,rules menu and choice menu hence it is a separate option
 			movzx edx,[colors+2*2]
@@ -182,23 +182,22 @@ CODESEG
 			je @@statsLogo
 			cmp eax,5
 			je @@choiseLogo
-			;call drawPlayers
+			call drawLogoDistribution,3,1
 			jmp @@end
 
 		@@choiseLogo:
-			call drawChoise
+			call drawLogoDistribution,2,1
 			jmp @@end
 
-
 		@@statsLogo:
-			call drawStats
+			call drawLogoDistribution,1,1
 			jmp @@end
 
 		@@credits: ;credits have a different format that the buttons hence it is a separate option
 			add eax,1
 			mov ebx,[menuMain+eax*4];the text for the credits
 			call printString,ebx,edx,20,2
-			call drawlogo
+			call drawLogoDistribution,0,1
 
 		@@end:
 			ret 

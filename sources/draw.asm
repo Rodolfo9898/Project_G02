@@ -189,7 +189,7 @@ CODESEG
 			mov eax,[turnPiece] ;xpos
 			mov ebx,[turnPiece+1*4];ypos
 			mov ecx,[turnPiece+2*4];piece dimention
-			call drawRectangle,eax,ebx,ecx,ecx,edx,1 ;to indicate the current turn
+			call drawSprite,eax,ebx,offset fieldXS,ecx,ecx,edx,1;to indicate the current turn
 			ret 
 	endp playerTurn
 
@@ -236,7 +236,7 @@ CODESEG
 
 ;draw a sprite onto the screen
 	proc drawSprite
-		ARG 	@@x:dword, @@y:dword, @@sprite:dword, @@w:dword, @@h:dword,@@indication:dword
+		ARG 	@@x:dword, @@y:dword, @@sprite:dword, @@w:dword, @@h:dword,@@indication:dword,@@mask:dword
 		USES eax, edx, ecx, ebx, edi
 
 			mov edi, VMEMADR	; Start addres
@@ -262,6 +262,17 @@ CODESEG
 			mov al, [ebx]
 			cmp al,00h ;black
 			je @@fill_in
+			cmp al,01h
+			je @@backgroundFiller
+			jmp @@contour
+
+		@@backgroundFiller:
+			push eax
+			mov eax,[@@mask]
+			cmp eax,0
+			je @@background
+			pop eax
+			sub eax,1
 			jmp @@contour
 
 		@@fill_in:
@@ -305,59 +316,57 @@ CODESEG
 		movzx ecx,[@@indication]
 		mov eax, [@@xValue] ; in pixels
 		mov ebx, [@@yValue] ;in pixels
-		call drawSprite,eax,ebx,edx,[pieceDim],[pieceDim],ecx
+		call drawSprite,eax,ebx,edx,[pieceDim],[pieceDim],ecx,0
 		ret
 
 	endp drawer
 
-;helper to draw the logo
-	proc drawlogo
-		uses eax,ebx,ecx
+;helper to draw the logos
+	proc drawLogoDistribution
+		uses eax,ebx,ecx,edx,edi
+		ARG @@position:byte,@@indication:byte
 
-		mov eax,15
-		mov ebx,80
-		xor ecx,ecx
+			movzx edi,[@@position]
+			mov ecx,0
+		
+		@@loadLogo:
+			mov eax, offset logos
+			mov ebx,[eax+4*edi];the correct vector
+			push ebx
 
-	@@draw:
-		cmp ecx,1
-		jg @@done
-		call drawSprite,eax,ebx,offset logo,50,50,0
-		add eax,237
-		add ecx,1
-		jmp @@draw
-	
-	@@done:
-		ret
+		@@loadLogoValues:
+			mov eax, offset logoPlace
+			mov edx,[eax+4*ecx];the correct vector
+			movzx ebx,[edx+edi]; the value you want
+			cmp ecx,2
+			je @@drawLogo
+			add ecx,1
+			push ebx
+			jmp @@loadLogoValues
+		
+		@@duplicate:
+			add eax,237
+			pop ecx
+			call drawSprite,eax,ebx,ecx,edx,edx,0,0
+			jmp @@done
 
-	endp drawlogo
-
-;draw the stats image
-	proc drawStats
-		USES eax,ebx
-		mov eax,80
-		mov ebx,40
-		call drawSprite,15,15,offset statIMG,61,61,0
-		ret 
-	endp drawStats
-
-;draw the choise image
-	proc drawChoise
-		USES eax,ebx
-		mov eax,80
-		mov ebx,40
-		call drawSprite,5,80,offset choiseIMG,61,61,0
-		ret 
-	endp drawChoise
-
-;draw the player image
-	proc drawPlayers
-		USES eax,ebx
-		mov eax,80
-		mov ebx,40
-		call drawSprite,5,80,offset playerIMG,50,50,0
-		ret 
-	endp drawPlayers
-	
+		@@drawLogo:
+			mov edx,ebx ;dimentions where the last item computed
+			pop ebx ;y value
+			pop eax ; x value
+			pop ecx; offset to sprite
+			call drawSprite,eax,ebx,ecx,edx,edx,0,0
+		
+		@@checkForDuplicate:
+			push ecx
+			movzx ecx,[@@indication]
+			cmp ecx,1
+			je @@duplicate
+			pop ecx
+		
+		@@done:
+			ret
+	endp drawLogoDistribution
 
 DATASEG
 ;;Constants
@@ -367,17 +376,27 @@ DATASEG
 		grid dd 30
 	;this are the constants used to place the turn piece onto the gamescreen
 	; they are stores as follow xpos,ypos,dimention
-		turnPiece dd 10,30,50
+		turnPiece dd 10,30,42
 	;the size off the piece that needs to be drawn
 		pieceDim dd 20
 	;these are the elments used to define a button
 	;the represent the following: how long is each letter in the box,how wide is each letter in the box,height of the box, width off the box
 		buttonSize         db 7,8,11,130,90
+	;logo dimentions
+		logoDimentions db 50,61,61,61
+	;logo startpoint
+		logoStartPoint db 15,15,5,5
+	;logo begin y
+ 		logoYValue db 80,15,80,75
 
 ;;Vectors
 	;sprites vector
 		sprites dd offset fieldXS, offset fieldS, offset fieldM, offset fieldL, offset fieldXL, offset fieldXL, offset fieldXL
 
 	;logos vector
-		logos dd offset logo, offset statIMG, offset choiseIMG, offset playersIMG
+		logos dd offset logo, offset statIMG, offset choiseIMG, offset playerIMG
+	
+	;logo placement
+		logoPlace dd offset logoStartPoint, offset logoYValue, offset logoDimentions
+	
 END
