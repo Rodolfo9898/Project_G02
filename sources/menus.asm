@@ -180,8 +180,13 @@ CODESEG
 			movzx eax,[@@menu]
 			cmp eax,2
 			je @@statsLogo
+			cmp eax,3
+			je @@difficultyLogo
 			cmp eax,5
 			je @@choiseLogo
+			jmp @@end
+
+		@@difficultyLogo:
 			call drawLogoDistribution,3,1
 			jmp @@end
 
