@@ -3,12 +3,12 @@ P386
 MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
-include "setup.inc"
-include "print.inc"
-include "draw.inc"
-include "array.inc"
-include "logic.inc"
-include "mouse.inc"
+include "incFiles/setup.inc"
+include "incFiles/print.inc"
+include "incFiles/draw.inc"
+include "incFiles/array.inc"
+include "incFiles/logic.inc"
+include "incFiles/mouse.inc"
 
 CODESEG
 ;make a move on the board+update the array correctly

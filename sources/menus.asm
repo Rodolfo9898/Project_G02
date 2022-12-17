@@ -3,12 +3,12 @@ P386
 MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
-include "setup.inc"
-include "mouse.inc"
-include "array.inc"
-include "print.inc"
-include "draw.inc"
-include "sprites.inc"
+include "incFiles/setup.inc"
+include "incFiles/mouse.inc"
+include "incFiles/array.inc"
+include "incFiles/print.inc"
+include "incFiles/draw.inc"
+include "incFiles/sprites.inc"
 
 CODESEG
 ;according to the menu you want you will load the corresponsding header

@@ -1,8 +1,0 @@
-everthing is kept inside the sources file
-it's to separte the documentation from the code
-since the code is spit up in different files
-the game has currently on ly the basic menu ineteractions
-for the keys, the mouse is still in progress but works already
-with one button in the main menu
-the rest will be done in a more generic procedure that still needs
-to be made

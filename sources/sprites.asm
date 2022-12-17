@@ -3,10 +3,9 @@ P386
 MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
-include "sprites.inc"
+include "incFiles/sprites.inc"
 CODESEG
 DATASEG
-;;;;https://lvgl.io/tools/imageconverter use to convert to hexdecimal code 
 ;;Sprites
     ;for grid 5*4
         fieldXS     db 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h, 01h

@@ -3,11 +3,11 @@ P386
 MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
-include "setup.inc"
-include "print.inc"
-include "draw.inc"
-include "array.inc"
-include "keys.inc"
+include "incFiles/setup.inc"
+include "incFiles/print.inc"
+include "incFiles/draw.inc"
+include "incFiles/array.inc"
+include "incFiles/keys.inc"
 
 CODESEG
 ;uptade the arrary

@@ -3,10 +3,10 @@ P386
 MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
-include "setup.inc"
-include "print.inc"
-include "draw.inc"
-include "sprites.inc"
+include "incFiles/setup.inc"
+include "incFiles/print.inc"
+include "incFiles/draw.inc"
+include "incFiles/sprites.inc"
 
 ;;;;global constants
 VMEMADR EQU 0A0000h	; video memory address

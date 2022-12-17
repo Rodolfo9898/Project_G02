@@ -3,11 +3,11 @@ P386
 MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
-include "setup.inc"
-include "mouse.inc"
-include "draw.inc"
-include "interact.inc"
-include "keys.inc"
+include "incFiles/setup.inc"
+include "incFiles/mouse.inc"
+include "incFiles/draw.inc"
+include "incFiles/interact.inc"
+include "incFiles/keys.inc"
 
 CODESEG
 ;main

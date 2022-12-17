@@ -3,8 +3,8 @@ P386
 MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
-include "keys.inc"
-include "setup.inc"
+include "incFiles/keys.inc"
+include "incFiles/setup.inc"
 
 CODESEG
 ; Installs the custom keyboard handler

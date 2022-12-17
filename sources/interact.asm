@@ -3,16 +3,15 @@ P386
 MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
-include "setup.inc"
-include "mouse.inc"
-include "array.inc"
-include "menus.inc"
-include "draw.inc"
-include "logic.inc"
-include "print.inc"
-include "interact.inc"
-include "keys.inc"
-include "sprites.inc"
+include "incFiles/setup.inc"
+include "incFiles/mouse.inc"
+include "incFiles/array.inc"
+include "incFiles/menus.inc"
+include "incFiles/draw.inc"
+include "incFiles/logic.inc"
+include "incFiles/print.inc"
+include "incFiles/interact.inc"
+include "incFiles/keys.inc"
 
 CODESEG
 ;actual game engine

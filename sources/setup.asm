@@ -3,7 +3,7 @@ P386
 MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
-include "setup.inc"
+include "incFiles/setup.inc"
 
 CODESEG
 ;change the videomode

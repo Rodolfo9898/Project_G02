@@ -4,7 +4,7 @@
 
 # Settings - Edit the names of the object and executable files.
 objs = game.obj setup.obj print.obj array.obj draw.obj menus.obj logic.obj mouse.obj keys.obj interact.obj sprites.obj
-dest = game.exe
+dest =  ../game.exe
 
 # =============================================================================
 # Do NOT edit this section, unless you know what you are doing.

@@ -42,8 +42,8 @@ P386
 MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
-INCLUDE "mouse.inc"
-include "setup.inc"
+INCLUDE "incFiles/mouse.inc"
+include "incFiles/setup.inc"
 
 
 ;;;;global constants

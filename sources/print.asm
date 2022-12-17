@@ -3,8 +3,8 @@ P386
 MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
-include "setup.inc"
-include "print.inc"
+include "incFiles/setup.inc"
+include "incFiles/print.inc"
 
 CODESEG
 ;move the cursor to a specific place
