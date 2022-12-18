@@ -16,7 +16,8 @@ CODESEG
 			mov dl,[@@row]
 			mov dh,[@@column]
 			int 10h 
-			ret 
+			ret
+			
 	endp moveCursor
 ;Print a character on the screen
 	proc printChar
@@ -29,6 +30,7 @@ CODESEG
 			mov al,[@@char]     ;print
 			int 10h 
 			ret
+
 	endp printChar
 
 ;Print a string onto a specific position on screen with a specific color
@@ -88,6 +90,7 @@ CODESEG
 			movzx edx,[cursorPosVert+ebx] ;the correct possiton for the cursor
 			movzx edi,[cursorPosHor]
 			movzx ebx, [colors+2*2]
+
 		@@printDigits:		
 			pop ax
 			add	al,'0'      	; Add 30h => code for a digit in the ASCII table, ...
@@ -95,6 +98,7 @@ CODESEG
 			call moveCursor,edi,edx
 			add edi,1  
 			loop @@printDigits	; Until digit counter = 0.
+
 			ret
 	endp printScore
 
