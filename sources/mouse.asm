@@ -1,4 +1,3 @@
-
 IDEAL
 P386
 MODEL FLAT, C
