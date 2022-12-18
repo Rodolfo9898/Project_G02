@@ -371,8 +371,7 @@ CODESEG
 DATASEG
 ;;Constants
 	;these are the constants used for the graphics of the grid
-	;they have been ordered as follows:
-	;tickness of the grid,spacing between each column or row,the height,the width
+	;spacing between each column
 		grid dd 30
 	;this are the constants used to place the turn piece onto the gamescreen
 	; they are stores as follow xpos,ypos,dimention
@@ -392,11 +391,9 @@ DATASEG
 ;;Vectors
 	;sprites vector
 		sprites dd offset fieldXS, offset fieldS, offset fieldM, offset fieldL, offset fieldXL, offset fieldXL, offset fieldXL
-
 	;logos vector
 		logos dd offset logo, offset statIMG, offset choiseIMG, offset playerIMG
-	
 	;logo placement
 		logoPlace dd offset logoStartPoint, offset logoYValue, offset logoDimentions
-	
+
 END
