@@ -223,7 +223,6 @@ CODESEG
 			ret
 	endp adaptMoveText
 
-
 ;adapt validator for the inputs
 	proc adaptValidator
 		ARG	@@value:byte
@@ -304,7 +303,7 @@ CODESEG
 	
 ;clear the grid for a new game
 	proc clearGrid
-		USES 	ecx
+		USES ecx
 
 			xor ecx,ecx; zero is the neutral value 
 		@@loop:;fill the grig up with zeros
