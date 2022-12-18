@@ -6,8 +6,6 @@ ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 include "incFiles/setup.inc"
 include "incFiles/mouse.inc"
 
-
-
 ;;;;global constants
 VMEMADR EQU 0A0000h	; video memory address
 SCRWIDTH EQU 320	; screen witdth
