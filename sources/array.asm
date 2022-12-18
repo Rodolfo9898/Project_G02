@@ -7,7 +7,6 @@ include "incFiles/setup.inc"
 include "incFiles/print.inc"
 include "incFiles/draw.inc"
 include "incFiles/array.inc"
-include "incFiles/keys.inc"
 
 CODESEG
 ;uptade the arrary

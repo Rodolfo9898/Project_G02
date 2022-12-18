@@ -19,4 +19,5 @@ global field:byte:70,\
        playerColor:byte,\
        movingSpace:byte,\
        moveDone:byte,\
-       gridSpacing:byte
+       gridSpacing:byte,\
+       validEntry:byte 

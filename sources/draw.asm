@@ -4,9 +4,9 @@ MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
 include "incFiles/setup.inc"
+include "incFiles/sprites.inc"
 include "incFiles/print.inc"
 include "incFiles/draw.inc"
-include "incFiles/sprites.inc"
 
 ;;;;global constants
 VMEMADR EQU 0A0000h	; video memory address

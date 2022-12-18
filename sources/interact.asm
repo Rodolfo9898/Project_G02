@@ -4,14 +4,14 @@ MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
 include "incFiles/setup.inc"
-include "incFiles/mouse.inc"
-include "incFiles/array.inc"
-include "incFiles/menus.inc"
-include "incFiles/draw.inc"
-include "incFiles/logic.inc"
-include "incFiles/print.inc"
-include "incFiles/interact.inc"
 include "incFiles/keys.inc"
+include "incFiles/mouse.inc"
+include "incFiles/print.inc"
+include "incFiles/draw.inc"
+include "incFiles/array.inc"
+include "incFiles/logic.inc"
+include "incFiles/menus.inc"
+include "incFiles/interact.inc"
 
 CODESEG
 ;actual game engine

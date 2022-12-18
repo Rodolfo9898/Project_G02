@@ -82,5 +82,7 @@ DATASEG
 		moveDone db 0
 	;values that can replace the standard ones in grid
 		gridSpacing db 42,36,31,27,22,22,22
+	; last valid input for the array
+		validEntry db 08h ;number 7
 
 END

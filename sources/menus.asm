@@ -4,11 +4,12 @@ MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
 include "incFiles/setup.inc"
+include "incFiles/sprites.inc"
 include "incFiles/mouse.inc"
 include "incFiles/array.inc"
 include "incFiles/print.inc"
 include "incFiles/draw.inc"
-include "incFiles/sprites.inc"
+include "incFiles/menus.inc"
 
 CODESEG
 ;according to the menu you want you will load the corresponsding header

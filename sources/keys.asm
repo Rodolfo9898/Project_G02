@@ -3,8 +3,8 @@ P386
 MODEL FLAT, C
 ASSUME cs:_TEXT,ds:FLAT,es:FLAT,fs:FLAT,gs:FLAT
 
-include "incFiles/keys.inc"
 include "incFiles/setup.inc"
+include "incFiles/keys.inc"
 
 CODESEG
 ; Installs the custom keyboard handler
@@ -409,8 +409,6 @@ CODESEG
     endp keysMenuNavigation
 
 DATASEG
-	; last valid input for the array
-		validEntry db 08h ;number 7
     ;originalkeyboard    
         originalKeyboardHandlerS	dw ?			; SELECTOR of original keyboard handler
         originalKeyboardHandlerO	dd ?			; OFFSET of original keyboard handler
